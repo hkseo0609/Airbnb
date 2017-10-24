@@ -3,16 +3,62 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.airbnb.web.mapper.HKMapper">
+	<resultMap type="com.airbnb.web.command.ResultMap" id="ResiMap">
+		<id property="hostSerial" column="host_serial"/>
+		<result property="memberId" column="member_id"/>		
+		<result property="residenceName" column="residence_name"/>		
+		<result property="price" column="price"/>		
+		<result property="zipcode" column="zipcode"/>		
+		<result property="detailImg" column="detail_img"/>		
+		<result property="infoImg" column="info_img"/>		
+		<result property="resiContent" column="resi_content"/>		
+		<result property="addr" column="addr"/>		
+		<result property="teen" column="teen"/>		
+		<result property="adult" column="adult"/>		
+		<result property="child" column="child"/>
+		<!-- dd -->
+		<result property="wifi" column="wifi"/>		
+		<result property="bedNum" column="bed_num"/>		
+		<result property="pet" column="pet"/>		
+		<result property="essentialItem" column="essential_item"/>		
+		<result property="parking" column="parking"/>		
+		<result property="bathroomNum" column="bathroom_num"/>		
+		<result property="tv" column="tv"/>		
+		<result property="washingMac" column="washing_mac"/>		
+		<result property="airCondi" column="Air_condi"/>		
+		<result property="kitchen" column="kitchen"/>
+		<result property="boardSeq" column="board_seq"></result>
+		<result property="hostSerial" column="host_serial"></result>
+		<result property="reviewStar" column="review_star"></result>		
+		<result property="contents" column="board_content"></result>		
+		<result property="regdate" column="board_regdate"></result>		
+	</resultMap>
+	
 	<insert id="insert">
 	</insert>
-	
-	<select id="selectList">
+		
+	<select id="selectList"
+		resultMap="ResiMap" 
+		parameterType="com.airbnb.web.command.Command">
+		SELECT * 
+		FROM board b JOIN reviewboard rb ON b.board_seq = rb.board_seq 
+		WHERE rb.host_serial LIKE #{search};
 	</select>
    
-	<select id="selectOne">
+	<select id="selectOne"
+		resultMap="ResiMap" 
+		parameterType="com.airbnb.web.command.Command">
+		SELECT * 
+		FROM residence r JOIN resiopt o ON r.host_serial LIKE o.host_serial 
+		WHERE r.host_serial LIKE #{search}
 	</select>
 	
-	<select id="count">  
+	<select id="count"
+		resultType="string"
+		parameterType="com.airbnb.web.command.Command">  
+		SELECT COUNT(*) 
+		FROM board b JOIN reviewboard rb ON b.board_seq = rb.board_seq 
+		WHERE rb.host_serial LIKE #{search};
 	</select>
 
 	<update id="update">

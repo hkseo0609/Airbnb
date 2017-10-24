@@ -46,6 +46,7 @@ hee.rev = (function(){
 	};
 	var onCreate=function(){
 		setContextView();
+		
 		var $menubar=$('#menubar');
 		var $transBtn=$('#transBtn');
 		var $searchBtn=$('#searchBtn');
@@ -74,6 +75,7 @@ hee.rev = (function(){
 		});
 		
 		$.getScript(temp,()=>{
+			
 			var arr = ['개요','후기','호스트','위치'];
 			$.each(arr, function(i,j){
 				var x='#moveDiv'+i;
@@ -107,41 +109,9 @@ hee.rev = (function(){
 			.css({'width':'93%', 'height':'50px', 'font-color':'white', 'margin-top':'20px', 'font-size':'22px','font-weight':'bold','outline-style': 'none'})
 			.attr('data-toggle','modal')
 			.attr('data-target','#myModal')
-			.appendTo($revBtn)
-			.click(e=>{
-				alert('예약 완료');
-				$formCm.html(compUI.iBtn('formBtn')
-					.val('예약 확인')
-					.attr('data-dismiss','modal')
-					.addClass('btn btn-danger btn-large btn-block')
-					.css({'font-size': '22px', 'font-weight':'bold','outline-style': 'none'})
-					.click(e=>{
-						alert('예약 확인 완료!');
-						
-
-					})
-				)
-			});
+			.appendTo($revBtn);
 			
-			var rvBoard=[
-	            { a:'서희경', b:'2017-10-18', c:'What a great experience! If you want a beautiful view and somewhat private quiet setting......  what tove the boat.'},
-	            { a:'이지원', b:'2017-10-18', c:'this is your place. Justin was there working to get the boats ready for the potential arrival of Irma and we as love love the boat.'},
-	            { a:'이주연', b:'2017-10-18', c:'on a boat.... this is your place. Justin was there working to get the boats ready for the potential arrival '},
-	            { a:'김하윤', b:'2017-10-18', c:'Justin was there working to get the boats f Irma and we hadthe storm head our way. He was great to deal with'}
-	         ];
-			var forTb;
-			$.each(rvBoard, function(i,j){
-				forTb += '<tr>'
-					+'	<td style="font-size: 17px; background: #EAEAEA">'+j.a+'</td>'
-					+'</tr>'
-					+'<tr>'
-					+'	<td style="font-size: 17px;">'+j.b+'</td>'
-					+'</tr>'
-					+'<tr>'
-					+'	<td style="font-size: 17px;">'+j.c+'</td>'
-					+'</tr>';
-			});
-			$('#tbody').html(forTb);
+			
 			
 			// start Date 설정시 end Date의 min Date 지정
 			$( "#startDt" ).datepicker({
@@ -207,16 +177,8 @@ hee.rev = (function(){
 			compUI.btn('upRevA')
 			.addClass('glyphicon glyphicon-upload')
 			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpA')
-			.click(e=>{	
-				var state = $('#revNumA').text()*1;
-				state++;
-				if(state>=6){
-					alert('최대 인원은 5명 입니다.');
-					state = 5;
-				}
-				$('#revNumA').text(state);
-			});
+			.appendTo('#revUpA');
+			
 			compUI.btn('downRevA')
 				.addClass('glyphicon glyphicon-download')
 				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
@@ -230,59 +192,46 @@ hee.rev = (function(){
 					}
 					$('#revNumA').text(state);
 			});
-			compUI.btn('upRevY')
+			compUI.btn('upRevT')
 			.addClass('glyphicon glyphicon-upload')
 			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpY')
-			.click(e=>{	
-				var state = $('#revNumY').text()*1;
-				state++;
-				if(state>=6){
-					alert('최대 인원은 5명 입니다.');
-					state = 5;
-				}
-				$('#revNumY').text(state);
-			});
-			compUI.btn('downRevY')
+			.appendTo('#revUpT');
+			
+			compUI.btn('downRevT')
 				.addClass('glyphicon glyphicon-download')
 				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-				.appendTo('#revDownY')
+				.appendTo('#revDownT')
 				.click(e=>{
-					var state = $('#revNumY').text()*1;
+					var state = $('#revNumT').text()*1;
 					state--;
 					if(state<0){
 						alert('더 이상 줄일 수 없습니다.');
 						state = 0;
 					}
-					$('#revNumY').text(state);
+					$('#revNumT').text(state);
 			});
-			compUI.btn('upRevB')
+			compUI.btn('upRevC')
 			.addClass('glyphicon glyphicon-upload')
 			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpB')
-			.click(e=>{	
-				var state = $('#revNumB').text()*1;
-				state++;
-				if(state>=6){
-					alert('최대 인원은 5명 입니다.');
-					state = 5;
-				}
-				$('#revNumB').text(state);
-			});
-			compUI.btn('downRevB')
+			.appendTo('#revUpC');
+			
+			compUI.btn('downRevC')
 				.addClass('glyphicon glyphicon-download')
 				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-				.appendTo('#revDownB')
+				.appendTo('#revDownC')
 				.click(e=>{
-					var state = $('#revNumB').text()*1;
+					var state = $('#revNumC').text()*1;
 					state--;
 					if(state<0){
 						alert('더 이상 줄일 수 없습니다.');
 						state = 0;
 					}
-					$('#revNumB').text(state);
+					$('#revNumC').text(state);
 			});
-		
+			
+			hee.logic.revdata('co11111111');
+			hee.logic.revDetail('co11111111');
+			hee.logic.datePic('co11111111');
 		  
 		});
 		
@@ -292,10 +241,225 @@ hee.rev = (function(){
 	var setContextView=function(){
 	
 			$('#content').html(reservation.layout());
-			alert('수정13331'+ctx);
+			//$('body').html(reservation.layout());
+			
 	};
 	return {init:init};
 })();
+/*******************************
+ * 예약페이지 로직단
+ *******************************/
+hee.logic=(function(){
+	var ctx, js, temp;
+	var init = ()=>{		
+		js=$$('j');
+		ctx=$$('x');
+		temp=js+'/template.js';	
+	};
+	
+	var revdata=(x)=>{
+		alert('revdata 진입');
+		init();
+		
+		$.ajax({
+			url:ctx +'/get/rev/'+x,
+			method:'post',
+			data : JSON.stringify(x),
+			contentType : 'application/json',
+			success : d=>{
+				var adult=d.detail.adult*1;
+				var child=d.detail.child*1;
+				var teen=d.detail.teen*1;
+				var limit=adult+child+teen;
+				$('#resiName').html(d.detail.residenceName);
+				$('#host_id').html(d.detail.memberId);
+				$('#price').html('￦ '+d.detail.price+'원');
+				$('#imgbox').css({'background-image':'url('+d.detail.detailImg+')'});
+				$('#limit_no').html('인원 '+limit+'명');
+				$('#bed_num').html('침대 '+d.detail.bedNum+'개');
+				$('#bed_num2').html('퀸 베드 '+d.detail.bedNum+'개');
+				$('#bathroom_num').html('욕실 '+d.detail.bathroomNum+'개');
+				$('#detail_cont').html(d.detail.resiContent);
+				$('#addr').html(d.detail.addr);
+				$('#info_hostId').html(d.detail.memberId+' 님');
+				$('#loca_addr').html(d.detail.addr);
+				
+				if(d.detail.essentialItem===('N')){
+					$('#essential').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.wifi===('N')){
+					$('#wifi').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.pet===('N')){
+					$('#pet').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.parking===('N')){
+					$('#parking').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.tv===('N')){
+					$('#tv').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.washingMac===('N')){
+					$('#washing').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.airCondi===('N')){
+					$('#aircondi').css({'text-decoration':'line-through'});
+				};
+				if(d.detail.kitchen===('N')){
+					$('#kitchen').css({'text-decoration':'line-through'});
+				};
+				
+				$('#upRevA').click(e=>{	
+					e.preventDefault();
+					var state = $('#revNumA').text()*1;
+					state++;
+					if(state>adult){
+						alert('최대 인원은 '+adult+'명 입니다.');
+						state = adult;
+					}
+					$('#revNumA').text(state);
+				});
+				
+				$('#upRevT').click(e=>{	
+					e.preventDefault();
+					var state = $('#revNumT').text()*1;
+					state++;
+					if(state>teen){
+						alert('최대 인원은 '+teen+'명 입니다.');
+						state = teen;
+					}
+					$('#revNumT').text(state);
+				});
+				
+				$('#upRevC').click(e=>{	
+					e.preventDefault();
+					var state = $('#revNumC').text()*1;
+					state++;
+					if(state>child){
+						alert('최대 인원은 '+child+'명 입니다.');
+						state = child;
+					}
+					$('#revNumC').text(state);
+				});
+				
+			},
+			error : (x,s,m)=>{
+				alert('에러 발생'+m);
+			}
+		});
+		/*$.ajax({
+			url:ctx +'/get/rev/'+x,
+			method:'post',
+			data : JSON.stringify({
+				'articleSeq':x,
+				'title':_title,
+				'id':_writer,
+				'content':_message
+			}),
+			contentType : 'application/json',
+			success : d=>{
+				alert('ajax 통신 성공'+d.update);
+				meta.board.detail(d.update);
+			},
+			error : (x,s,m)=>{
+				alert('글 수정시 에러 발생'+m);
+			}
+		});*/
+	};
+	var revDetail=(x)=>{
+		alert('revDetail 진입');
+		init();
+		
+		$.ajax({
+			url:ctx +'/list/rev/'+x,
+			method:'post',
+			data : JSON.stringify(x),
+			contentType : 'application/json',
+			success : d=>{
+				$('#review_no').html('후기 '+d.count+'개');
+				$('#reviewtb_no').html('후기 '+d.count+'개');
+				
+				var forTb;
+				$.each(d.revList, function(i,j){
+					forTb += '<tr>'
+						+'	<td style="font-size: 17px; background: #EAEAEA">'+j.memberId+'</td>'
+						+'</tr>'
+						+'<tr>'
+						+'	<td style="font-size: 17px;">'+j.regdate+'</td>'
+						+'</tr>'
+						+'<tr>'
+						+'	<td style="font-size: 17px;">'+j.contents+'</td>'
+						+'</tr>';
+				});
+				$('#tbody').html(forTb);
+			},
+			error : (x,s,m)=>{
+				alert('에러 발생'+m);
+			}
+		});
+		
+	};
+	var datePic =(x)=>{
+		init();
+		var memId = sessionStorage.getItem('smemberid');
+		alert("데이트"+memId);
+		$('#reservation').click(e=>{
+			alert('예약 완료');
+			$.ajax({
+				url:ctx +'/put/rev/',
+				method:'post',
+				data : JSON.stringify({
+					'hostSerial':x,
+					'memberId': sessionStorage.getItem('smemberid'),
+					'checkin':$('#startDt').val(),
+					'checkout':$('#endDt').val(),
+					'adult':$('#revNumA').text(),
+					'teen':$('#revNumT').text(),
+					'child':$('#revNumC').text(),
+					'resPrice':$('#price').text()
+				}),
+				contentType : 'application/json',
+				success : d=>{
+					
+				},
+				error : (x,s,m)=>{
+					alert('에러 발생'+m);
+				}
+			});
+			$('#formDt').html($('#startDt').val()+' ~ '+$('#endDt').val());
+			$('#formRev_name').html($('#resiName').text());
+			$('#form_id').html($('#host_id').text());
+			$('#formA').html($('#revNumA').text()+' 명');
+			$('#formT').html($('#revNumT').text()+' 명');
+			$('#formC').html($('#revNumC').text()+' 명');
+			$('#form_price').html('￦ '+'원');
+			
+			$.getScript(temp,()=>{
+				$('#formCm').html(compUI.iBtn('formBtn')
+						.val('예약 확인')
+						.attr('data-dismiss','modal')
+						.addClass('btn btn-danger btn-large btn-block')
+						.css({'font-size': '22px', 'font-weight':'bold','outline-style': 'none'})
+						.click(e=>{
+							alert('예약 확인 완료!');
+							
+
+						})
+					)
+			});
+			
+		});
+		
+		
+	};
+	return {init:init, 
+		revdata:revdata, 
+		revDetail:revDetail,
+		datePic:datePic
+	};
+})();
+
+
 /*******************************
  * 숙소 등록
  *******************************/
@@ -465,7 +629,6 @@ var reservation={
 			+'<div id="container" style="width: 100%">'
 			+'<div id="moveDiv0"></div>'
 			+'	<div id="imgbox" style="margin: auto; width: 100%; height:550px;'
-			+'	background-image:url(https://a0.muscache.com/im/pictures/53992414/64510035_original.jpg);'
 			+'	background-size: cover; background-position: left center;"> '
 			+'	</div>'
 			+'	<div id="menu" style="padding-top:15px; width: 38%; height:50px; margin-left:18%; background: white; border-bottom: 1px solid #D5D5D5; z-index:800">'
@@ -476,23 +639,23 @@ var reservation={
 			+'		<div style="width:100%; display: inline-block;">'
 			+'			<div id="summary">'
 			+'				<div id="title" style="padding-top:10px;">'
-			+'					<div><span id="name" style="font-size: 36px; font-weight:bold;">the hanbit hostel testing</span></div>'
+			+'					<div><span id="resiName" style="font-size: 36px; font-weight:bold;"></span></div>'
 			+'					<div id="info" style="padding-top:4px;">'
-			+'						<span style="font-size: 17px;">서희경의 개인실</span>'
+			+'						<span id="host_id" style="font-size: 17px;"></span>'
+			+'						<span style="font-size: 17px;">의 개인실</span>'
 			+'						<span style="font-size: 17px;">·</span>'
-			+'						<span style="font-size: 17px;">hee</span>'
-			+'						<span style="font-size: 17px;">별점</span>'
-			+'						<span style="font-size: 17px;">후기 00개</span>'
+			+'						<span id="review_star" style="font-size: 17px;">별점</span>'
+			+'						<span id="review_no"style="font-size: 17px;"></span>'
 			+'					</div>'
 			+'					<div style="padding-top:20px;">'
 			+'						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>'
-			+'						<span style="font-size: 17px;">인원 00명</span>'
+			+'						<span id="limit_no" style="font-size: 17px;"></span>'
 			+'						<span class="glyphicon glyphicon-home" aria-hidden="true" style="padding-left:10px;"></span>'
-			+'						<span style="font-size: 17px;">침실 00개</span>'
+			+'						<span style="font-size: 17px;">침실 1개</span>'
 			+'						<span class="glyphicon glyphicon-bed" aria-hidden="true" style="padding-left:10px;"></span>'
-			+'						<span style="font-size: 17px;">침대 00개</span>'
+			+'						<span id="bed_num" style="font-size: 17px;"></span>'
 			+'						<span class="glyphicon glyphicon-tint" aria-hidden="true" style="padding-left:10px;"></span>'
-			+'						<span style="font-size: 17px;">욕실 00개</span>'
+			+'						<span id="bathroom_num" style="font-size: 17px;"></span>'
 			+'					</div>'
 			+'				</div>'
 			+'			</div>'
@@ -501,12 +664,6 @@ var reservation={
 			+'				<div style="padding-top:20px;"><span style="font-size: 17px; font-weight:bold;">숙소</span></div>'
 			+'				<div style="padding-top:10px; padding-bottom: 30px; border-bottom: 1px solid #D5D5D5;">'
 			+'					<span id="detail_cont" style="padding-top:10px; font-size: 17px;">'
-			+'						Room with private bathroom in an old country house, located on a sunny slope overlooking '
-			+'						the Idro lake (on the border between Lombardia and Trentino-Alto Adige regions). '
-			+'						The house is renewed, finished with pine wood, and with ceramic wood stoves. '
-			+'						The room and the bathroom are located in an independent part of the house accessible through '
-			+'						a small hallway. There is a spacious kitchen for our guests to use (shared with us). '
-			+'						We also have a nice veranda and a very suggestive living room finished with antique wood and sculptures.'
 			+'					</span>'
 			+'				</div>'
 			+'				<div style="padding-top:20px;"><span style="font-size: 17px; font-weight:bold;">편의시설</span></div>'
@@ -516,25 +673,25 @@ var reservation={
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M23.5 4H22V2.5C22 1.12 20.884 0 19.503 0H4.497A2.502 2.502 0 0 0 2 2.495V4H.5a.5.5 0 1 0 0 1H2v15.501C2 21.331 2.67 22 3.5 22H5v.5c0 .83.67 1.5 1.5 1.5h14c.831 0 1.5-.666 1.5-1.503V5h1.5a.5.5 0 0 0 0-1zM3 2.495C3 1.675 3.674 1 4.497 1h15.006C20.33 1 21 1.67 21 2.5V4h-2v-.505A.5.5 0 0 1 19.5 3a.5.5 0 0 0 0-1A1.5 1.5 0 0 0 18 3.495V15H3V2.495zM3 16h15v2H3v-2zm.5 5a.498.498 0 0 1-.5-.499V19h15v1.505c0 .27-.226.495-.5.495h-14zM21 22.497c0 .284-.22.503-.5.503h-14a.498.498 0 0 1-.5-.5V22h11.5c.826 0 1.5-.673 1.5-1.495V5h2v17.497z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">편의시설</span>'
+			+'								<span id="essential" style="font-size: 17px; padding-left:10px;">편의시설</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M21.5 6h-9.066L15.916.777a.5.5 0 1 0-.832-.554L11.232 6H8.768L4.916.223a.5.5 0 0 0-.832.554L7.566 6H2.5A2.504 2.504 0 0 0 0 8.5v13C0 22.885 1.118 24 2.5 24h19c1.376 0 2.5-1.121 2.5-2.5v-13C24 7.116 22.882 6 21.5 6zM23 21.5c0 .826-.675 1.5-1.5 1.5h-19c-.83 0-1.5-.668-1.5-1.5v-13C1 7.674 1.675 7 2.5 7h19c.83 0 1.5.668 1.5 1.5v13zM16.508 9H5.492A2.493 2.493 0 0 0 3 11.492v7.016A2.497 2.497 0 0 0 5.492 21h11.016A2.493 2.493 0 0 0 19 18.508v-7.016A2.497 2.497 0 0 0 16.508 9zM18 18.508c0 .823-.669 1.492-1.492 1.492H5.492C4.672 20 4 19.327 4 18.508v-7.016C4 10.67 4.669 10 5.492 10h11.016c.82 0 1.492.673 1.492 1.492v7.016zM22 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm0 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">TV</span>'
+			+'								<span id="tv" style="font-size: 17px; padding-left:10px;">TV</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M5 3.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zM3.5 4a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm4 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0-2a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1zM12 6c-4.413 0-8 3.585-8 8 0 4.413 3.585 8 8 8 4.413 0 8-3.585 8-8 0-4.413-3.585-8-8-8zm0 15c-3.77 0-6.84-2.992-6.986-6.725.354-.226.843-.567.853-.574 1.64-1.051 3.308-1.062 5.847.71 2.88 2.008 4.986 1.994 6.959.73l.252-.172C18.451 18.373 15.531 21 12 21zm6.133-6.701c-1.64 1.051-3.308 1.062-5.847-.71-2.88-2.008-4.986-1.994-6.959-.73l-.252.172C5.549 9.627 8.469 7 12 7c3.77 0 6.84 2.992 6.986 6.725-.354.226-.843.567-.853.574zM21.5 0H2.501A2.505 2.505 0 0 0 0 2.5v19C0 22.875 1.121 24 2.5 24h19c1.376 0 2.5-1.121 2.5-2.5v-19C24 1.125 22.879 0 21.5 0zM23 21.5c0 .826-.676 1.5-1.5 1.5h-19c-.826 0-1.5-.676-1.5-1.5v-19C1 1.675 1.676 1 2.5 1h19c.826 0 1.5.676 1.5 1.5v19z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">세탁기</span>'
+			+'								<span id="washing" style="font-size: 17px; padding-left:10px;">세탁기</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M16 13.54V3.991A3.998 3.998 0 0 0 12 0C9.794 0 8 1.788 8 3.992v9.547A5.98 5.98 0 0 0 6 18a6 6 0 1 0 12 0 5.98 5.98 0 0 0-2-4.46zM12 23a5 5 0 0 1-3.182-8.857.5.5 0 0 0 .182-.386V3.992A2.998 2.998 0 0 1 12 1c1.656 0 3 1.341 3 2.992v9.765a.5.5 0 0 0 .182.386A5 5 0 0 1 12 23zm2-8.453V4.005a1.999 1.999 0 1 0-4 0v10.542A3.991 3.991 0 0 0 8 18a4 4 0 0 0 8 0 3.991 3.991 0 0 0-2-3.453zM12 21a3 3 0 0 1-1.285-5.712.5.5 0 0 0 .285-.451V4.005a.999.999 0 1 1 2 0v10.832a.5.5 0 0 0 .285.451A3 3 0 0 1 12 21z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">냉난방</span>'
+			+'								<span id="aircondi" style="font-size: 17px; padding-left:10px;">냉난방</span>'
 			+'							</div>'
 			+'						</div>'
 			+'						'
@@ -543,25 +700,25 @@ var reservation={
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M12 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 5a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm5.918-5.775a.5.5 0 1 1-.836.55C15.892 12.964 14.012 12 12 12s-3.892.964-5.082 2.775a.5.5 0 0 1-.836-.55C7.462 12.126 9.66 11 12 11c2.34 0 4.538 1.126 5.918 3.225zm2.982-3.03a.5.5 0 1 1-.79.61C18.45 9.662 14.886 8 12 8c-2.832 0-6.256 1.619-8.118 3.823a.5.5 0 0 1-.764-.646C5.168 8.751 8.871 7 12 7c3.19 0 7.047 1.798 8.9 4.194zm2.945-2.333a.5.5 0 0 1-.707-.017C20.198 5.765 16.434 4 12 4S3.8 5.766.862 8.845a.5.5 0 0 1-.724-.69C3.258 4.885 7.278 3 12 3s8.742 1.886 11.863 5.155a.5.5 0 0 1-.017.707z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">무선 인터넷</span>'
+			+'								<span id="wifi" style="font-size: 17px; padding-left:10px;">무선 인터넷</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11-4.925 11-11 11zm.5-17H8v11.5a.5.5 0 0 0 1 0V13h3.5c1.93 0 3.5-1.569 3.5-3.5C16 7.57 14.43 6 12.5 6zm0 6H9V7h3.5C13.878 7 15 8.122 15 9.5c0 1.379-1.123 2.5-2.5 2.5z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">건물 내 무료 주차</span>'
+			+'								<span id="parking" style="font-size: 17px; padding-left:10px;">건물 내 무료 주차</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M18.84 15.347c.098.108-1.435-1.521-1.677-1.826a13.401 13.401 0 0 1-1.175-1.53c-.097-.145-.69-1.066-.857-1.304-.831-1.186-1.651-1.684-3.125-1.686V9h-.012c-1.474.003-2.294.501-3.125 1.687-.167.238-.76 1.16-.857 1.304a13.18 13.18 0 0 1-1.156 1.507c-.261.328-1.794 1.957-1.696 1.85-.485.53-.867.984-1.186 1.422-.599.826-.936 1.552-.961 2.226-.198 2.31 1.727 4.027 4.22 4.004.879 0 1.426-.198 2.21-.682l.217-.134c.788-.486 1.327-.668 2.34-.666 1.013-.002 1.552.18 2.34.666l.216.134c.785.484 1.332.682 2.215.682 2.489.023 4.414-1.695 4.215-4.028-.024-.65-.361-1.376-.96-2.202-.319-.438-.7-.892-1.186-1.423zM16.776 22c-.673 0-1.054-.138-1.695-.533l-.216-.134c-.932-.575-1.644-.816-2.857-.815h-.016c-1.213 0-1.925.24-2.857.815l-.216.134c-.64.395-1.022.533-1.69.533-1.948.018-3.364-1.245-3.218-2.943.017-.455.28-1.02.773-1.7.292-.403.652-.83 1.114-1.335-.132.145 1.45-1.536 1.722-1.88.438-.488.821-.995 1.223-1.594.107-.16.691-1.068.845-1.287C10.345 10.323 10.876 10 12 10c1.124 0 1.655.322 2.312 1.26.154.219.738 1.127.845 1.287.402.6.785 1.106 1.242 1.617.253.32 1.835 2.002 1.703 1.857.462.505.822.932 1.114 1.336.493.68.756 1.244.772 1.675.147 1.722-1.27 2.985-3.212 2.967zM8 8c1.7 0 3-1.82 3-4 0-2.18-1.3-4-3-4S5 1.82 5 4c0 2.18 1.3 4 3 4zm0-7c1.061 0 2 1.314 2 3s-.939 3-2 3-2-1.314-2-3 .939-3 2-3zM6 11c0-2.18-1.3-4-3-4s-3 1.82-3 4c0 2.18 1.3 4 3 4s3-1.82 3-4zm-3 3c-1.061 0-2-1.314-2-3s.939-3 2-3 2 1.314 2 3-.939 3-2 3zm18-7c-1.7 0-3 1.82-3 4 0 2.18 1.3 4 3 4s3-1.82 3-4c0-2.18-1.3-4-3-4zm0 7c-1.061 0-2-1.314-2-3s.939-3 2-3 2 1.314 2 3-.939 3-2 3zm-5-6c1.7 0 3-1.82 3-4 0-2.18-1.3-4-3-4s-3 1.82-3 4c0 2.18 1.3 4 3 4zm0-7c1.061 0 2 1.314 2 3s-.939 3-2 3-2-1.314-2-3 .939-3 2-3z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">애완동물 입실 가능</span>'
+			+'								<span id="pet" style="font-size: 17px; padding-left:10px;">애완동물 입실 가능</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M10.5 0a.5.5 0 0 0-.5.5v7.003A.498.498 0 0 1 9.51 8H8V.5a.5.5 0 1 0-1 0V8H5.49A.499.499 0 0 1 5 7.503V.5a.5.5 0 1 0-1 0v7.003C4 8.327 4.672 9 5.49 9H7v5c0 .03.012.057.017.086A1.49 1.49 0 0 0 6 15.498v7.004C6 23.33 6.672 24 7.5 24c.831 0 1.5-.67 1.5-1.498v-7.004c0-.658-.427-1.21-1.017-1.412.005-.029.017-.055.017-.086V9h1.51A1.5 1.5 0 0 0 11 7.503V.5a.5.5 0 0 0-.5-.5zM8 15.498v7.004a.496.496 0 0 1-.5.498.499.499 0 0 1-.5-.498v-7.004c0-.277.221-.498.5-.498.277 0 .5.223.5.498zM19.5 0h-2.003C16.097 0 15 1.071 15 2.5v7c0 1.428 1.096 2.5 2.497 2.5H19v2.092a1.489 1.489 0 0 0-.5-.092c-.831 0-1.5.67-1.5 1.498v7.004c0 .828.672 1.498 1.5 1.498.831 0 1.5-.67 1.5-1.498V0h-.5zm-2.003 11C16.643 11 16 10.37 16 9.5v-7c0-.87.645-1.5 1.497-1.5H19v10h-1.503zM19 22.502a.496.496 0 0 1-.5.498.499.499 0 0 1-.5-.498v-7.004c0-.277.221-.498.5-.498.277 0 .5.223.5.498v7.004z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span style="font-size: 17px; padding-left:10px;">부엌</span>'
+			+'								<span id="kitchen" style="font-size: 17px; padding-left:10px;">부엌</span>'
 			+'							</div>'
 			+' 						</div>'
 			+'					</div>'
@@ -569,8 +726,7 @@ var reservation={
 			+'					<div style="padding-top:10px; padding-bottom: 30px; border-bottom: 1px solid #D5D5D5; width:100%;">'
 			+'						<div style="width: 50px; height: 50px; background-image:url(./resources/img/bedroom.JPG);"></div>'
 			+'						<div style="padding-top:5px;">'
-			+'							<span style="font-size: 17px;">1번 침실</span><br />'
-			+'							<span id="bednum" style="font-size: 17px;">퀸 베드 1개</span>'
+			+'							<span id="bed_num2" style="font-size: 17px;"></span>'
 			+'						</div>'
 			+'					</div>'
 			+'				<div style="padding-top:20px;"><span style="font-size: 17px; font-weight:bold;">예약취소</span></div>'
@@ -583,10 +739,10 @@ var reservation={
 			+'			<div id="review" style="padding-top:40px;">'
 			+'				<div style="width:100%; padding-bottom: 20px;">'
 			+'					<div style="width:150px; display: inline-block;">'
-			+'						<span style="font-size: 28px; font-weight:bold;">후기 134개</span>'
+			+'						<span id="reviewtb_no" style="font-size: 28px; font-weight:bold;">후기</span>'
 			+'					</div>'
 			+'					<div style="width:100px; display: inline-block;">'
-			+'						<span style="font-size: 20px;">별점</span>'
+			+'						<span id="reviewStar" style="font-size: 20px;">별점</span>'
 			+'					</div>'
 			+'					<div style="width:300px; display: inline-block; float:right;">'
 			+'						<div id="searchBtn" style="width:50px; display: inline-block; float:right;">	'
@@ -629,13 +785,11 @@ var reservation={
 			+'				</div>'
 			+'			</div>'
 			+'			<div id="host_info" style="padding-top:40px; padding-bottom: 30px; border-bottom: 1px solid #D5D5D5;">'
-			+'				<span style="font-size: 28px; font-weight:bold;">호스트:</span>'
-			+'				<span id="host_id" style="font-size: 28px; font-weight:bold;">아이디</span>'
-			+'				<span style="font-size: 28px; font-weight:bold;">님</span>'
+			+'				<span style="font-size: 28px; font-weight:bold;">호스트 : </span>'
+			+'				<span id="info_hostId" style="font-size: 28px; font-weight:bold;"></span>'
 			+'				<div id="host_info" style="padding-top:10px;">'
-			+'					<span id="host_addr" style="font-size: 17px;">호스트 주소</span>'
-			+'					<span style="font-size: 17px;">/ 회원가입 :</span>'
-			+'					<span id="host_date" style="font-size: 17px;">호스트 회원가입 날짜</span>'
+			+'					<span style="font-size: 17px;">호스트(숙소) 주소 :</span>'
+			+'					<span id="addr" style="font-size: 17px;"></span>'
 			+'				</div>'
 			+'				<div style="padding-top:10px;">'
 			+'					<img src="https://a0.muscache.com/airbnb/static/badges/verified_badge-6ee370f5ca86a52ed6198fac858ac1f4.png" width="32" height="32" class="_j86mc1" alt="인증됨" >'
@@ -647,7 +801,7 @@ var reservation={
 			+'		<div id="location" style="margin: 0 auto; width: 100%; padding-top:40px; padding-bottom: 20px;">'
 			+'			<span style="font-size: 28px; font-weight:bold;">지역정보</span>'
 			+'			<div style="padding-top:10px;">'
-			+'				<span id="house_addr" style="font-size: 17px;">숙소 상세 주소</span>'
+			+'				<span id="loca_addr" style="font-size: 17px;">숙소 상세 주소</span>'
 			+'			</div>'
 			+'			<div style="margin-top:10px; height: 500px; background-color: #FFD9EC">'
 			+'				<span style="font-size: 17px;">지도 구현</span>'
@@ -657,8 +811,7 @@ var reservation={
 			+'	'
 			+'	<div id="revBar" style="width:27%; height:430px; display: inline-block; float:right; margin-right:17%; margin-top:-100px; padding-left:3%; z-index:900">'
 			+'		<div style="width:100%; height:50px; background-color: #414141; padding-top: 10px; padding-left: 20px; opacity:0.9;">'
-			+'			<span id="rate" style="color:white; font-size: 25px; font-weight:bold;">000,000</span>'
-			+'			<span style="color:white; font-size: 25px; font-weight:bold;">원</span>'
+			+'			<span id="price" style="color:white; font-size: 25px; font-weight:bold;">000,000</span>'
 			+'			<span style="color:white; font-size: 17px;">/박</span>'
 			+'		</div>'
 			+'		<div style="width:100%; height:430px; border: 1px solid; border-color: #c4c4c4; background: white; padding-top: 20px; padding-left: 20px;">'
@@ -704,9 +857,9 @@ var reservation={
 			+'			   			<span style="font-size:18px">청소년</span>'
 			+'					</div>'
 			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
-			+'			       		<span id="revUpY"></span>'
-			+'			       		<span id="revNumY" style="font-size:18px;">0</span>'
-			+'			       		<span id="revDownY"></span>'
+			+'			       		<span id="revUpT"></span>'
+			+'			       		<span id="revNumT" style="font-size:18px;">0</span>'
+			+'			       		<span id="revDownT"></span>'
 			+'					</div>'
 			+'				</div>'
 			+'				<div style="margin-top:5%">'
@@ -714,9 +867,9 @@ var reservation={
 			+'			   			<span style="font-size:18px">유아</span>'
 			+'					</div>'
 			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
-			+'		        		<span id="revUpB"></span>'
-			+'		        		<span id="revNumB" style="font-size:18px;">0</span>'
-			+'		        		<span id="revDownB"></span>'
+			+'		        		<span id="revUpC"></span>'
+			+'		        		<span id="revNumC" style="font-size:18px;">0</span>'
+			+'		        		<span id="revDownC"></span>'
 			+'					</div>'
 			+'				</div>'
 			+'			</div>'
@@ -747,29 +900,26 @@ var reservation={
 			+'			background-size: cover;">'
 			+'	      	</div>'
 			+'	      	<div style="padding-top: 5px; width: 100%; height: 40px;">'
-			+'	      		<span id="formRevName" style="float:right; font-size: 25px; font-weight:bold;">the hanbit hostel testing</span>'
+			+'	      		<span id="formRev_name" style="float:right; font-size: 25px; font-weight:bold;"></span>'
 			+'	      		<br />'
 			+'	      	</div>'
 			+'	      	<div style="width: 100%">'
-			+'	      		<span style="float:right; font-size: 17px; font-weight:bold;">호스트 이름</span>'
+			+'	      		<span id="form_id" style="float:right; font-size: 17px; font-weight:bold;"></span>'
 			+'	      	</div>'
 			+'	      	<div style="margin-top:30px; padding-top:10px; height: 40px; border-bottom: 1px solid #D5D5D5; font-size: 17px;">'
 			+'	      		<span>예약 날짜 :</span>'
-			+'	      		<span id="formStartDt" style="margin-left:10px;">2017.00.00</span>'
-			+'	      		<span>~</span>'
-			+'	      		<span id="formEndDt">2017.00.00</span>'
+			+'	      		<span id="formDt" style="margin-left:10px;"></span>'
 			+'	      	</div>'
 			+'	      	<div style="padding-top:10px; height: 90px; font-size: 17px; border-bottom: 1px solid #D5D5D5;">'
-			+'	     	 	<span>성인 : </span><span id="formA" style="margin-left:10px;">00</span>'
+			+'	     	 	<span>성인 : </span><span id="formA" style="margin-left:10px;"></span>'
 			+'	     	 	<br />'
-			+'	     	 	<span>청소년 :</span><span id="formY" style="margin-left:10px;">00</span>'
+			+'	     	 	<span>청소년 :</span><span id="formT" style="margin-left:10px;"></span>'
 			+'	     	 	<br />'
-			+'	     	 	<span>유아 :</span><span id="formC" style="margin-left:10px;">00</span>'
+			+'	     	 	<span>유아 :</span><span id="formC" style="margin-left:10px;"></span>'
 			+'	      	</div>'
 			+'	      	<div style="padding-top:10px; height: 40px; font-size: 17px;">'
 			+'	      		<span>총 금액 :</span>'
-			+'	      		<span style="margin-left:10px;">000,000</span>'
-			+'	      		<span>원</span>'
+			+'	      		<span id="form_price" style="margin-left:10px;"></span>'
 			+'	      	</div>'
 			+'	    </div>'
 			+'	    <div id="formCm" class="modal-footer">'

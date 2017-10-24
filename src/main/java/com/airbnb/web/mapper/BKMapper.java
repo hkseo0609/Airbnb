@@ -10,7 +10,7 @@ public interface BKMapper {
 	
 	public void insert(Object o);
 	public List<?> selectList(Command cmd);
-	public void selectOne (Command cmd);
+	public Object selectOne (Command cmd);
 	public String count(Command cmd);
 	public void update (Object o);
 	public void delete(Command cmd);

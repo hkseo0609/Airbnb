@@ -9,7 +9,13 @@
 	<select id="selectList">
 	</select>
    
-	<select id="selectOne">
+	<select id="selectOne" resultType="com.airbnb.web.domain.Member"
+		parameterType="com.airbnb.web.command.Command">
+		SELECT *
+		FROM Member 
+		WHERE 
+			member_id LIKE #{action} AND 
+			member_password LIKE #{column}
 	</select>
 	
 	<select id="count">  
