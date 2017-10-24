@@ -67,11 +67,11 @@ public class HKController {
 		System.out.println("####넘어온 아이디값:"+res.getMemberId());
 		Map<String,Object> map = new HashMap<>();
 		IPutService insertService = null;
-		insertService=(x)->{
+		/*insertService=(x)->{
 			mapper.insert(res);
 		};
 		insertService.execute(res);
-		map.put("result", "success");
+		map.put("result", "success");*/
 		return map;
 	};
 
