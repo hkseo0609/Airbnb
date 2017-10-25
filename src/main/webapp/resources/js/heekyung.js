@@ -111,69 +111,50 @@ hee.rev = (function(){
 			.attr('data-target','#myModal')
 			.appendTo($revBtn);
 			
-			
-			
 			// start Date 설정시 end Date의 min Date 지정
 			$( "#startDt" ).datepicker({
-	            dateFormat: "yy-mm-dd",
-	            dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-	            monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
-	            monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
-	            defaultDate: "+1w",
-	            numberOfMonths: 1,
-	            changeMonth: true,
-	            showMonthAfterYear: true ,
-	            changeYear: true,
+				dayNames : ['일', '월', '화', '수', '목', '금', '토'],
+				dayNamesShort : ['일', '월', '화', '수', '목', '금', '토'],
+				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
+				monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+				monthNames : ['1','2','3','4','5','6','7','8','9','10','11','12'],
+				showMonthAfterYear: true,
+				changeMonth: true,
+			    changeYear: true,
+			    dateFormat:'yy-mm-dd',
+			    minDate:1,
+			    closeText:'취소',
+			    showButtonPanel: true,
 	            onClose: function( selectedDate ) {
-	                $( "#endDt" ).datepicker( "option", "minDate", selectedDate );
-	            }
-	        });
-			// end Date 설정시 start Date max Date 지정
-			$("#endDt").datepicker({
-	            dateFormat: "yy-mm-dd",
-	            dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-	            monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
-	            monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
-	            defaultDate: "+1w",
-	            numberOfMonths: 1,
-	            changeMonth: true,
-	            showMonthAfterYear: true ,
-	            changeYear: true,
-	            onClose: function( selectedDate ) {
-	                $( "#startDt" ).datepicker( "option", "maxDate", selectedDate );
-	            }
-	        });
-			// start Date 설정시 end Date 가 start Date보다 작을 경우 end Date를 start Date와 같게 설정
-			$("#startDt").datepicker({
-	            dateFormat: "yy-mm-dd",
-	            defaultDate: "+1w",
-	            numberOfMonths: 1,
-	            changeMonth: true,
-	            showMonthAfterYear: true ,
-	            changeYear: true,
-	            onClose: function( selectedDate ) {
-	                if ($( "#endDt" ).val() < selectedDate)
-	                {
-	                    $( "#endDt" ).val(selectedDate);
+	            	if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
+	                    $(this).val('');
+	                }else{
+	                	$( "#endDt" ).datepicker( "option", "minDate", selectedDate );
 	                }
 	            }
 	        });
-			// end Date 설정시 end Date 가 start Date 보다 작을 경우 start Date를  end Date와 같게 설정
-			$( "#endDt" ).datepicker({
-		            dateFormat: "yy-mm-dd",
-		            defaultDate: "+1w",
-		            numberOfMonths: 1,
-		            changeMonth: true,
-		            showMonthAfterYear: true ,
-		            changeYear: true,
-		            onClose: function( selectedDate ) {
-		                if ($("#startDt" ).val() > selectedDate)
-		                {
-		                    $("#startDt" ).val(selectedDate);
-		                }
-		            }
-		        });
 			
+			// end Date 설정시 start Date max Date 지정
+			$("#endDt").datepicker({
+				dayNames : ['일', '월', '화', '수', '목', '금', '토'],
+				dayNamesShort : ['일', '월', '화', '수', '목', '금', '토'],
+				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
+				monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+				monthNames : ['1','2','3','4','5','6','7','8','9','10','11','12'],
+				showMonthAfterYear: true,
+				changeMonth: true,
+			    changeYear: true,
+			    dateFormat:'yy-mm-dd',
+			    closeText:'취소',
+			    showButtonPanel: true,
+	            onClose: function( selectedDate ) {
+	            	if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
+	                    $(this).val('');
+	                };
+	            }
+	        });
+			
+	   		
 			compUI.btn('upRevA')
 			.addClass('glyphicon glyphicon-upload')
 			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
@@ -192,6 +173,7 @@ hee.rev = (function(){
 					}
 					$('#revNumA').text(state);
 			});
+			
 			compUI.btn('upRevT')
 			.addClass('glyphicon glyphicon-upload')
 			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
@@ -229,21 +211,20 @@ hee.rev = (function(){
 					$('#revNumC').text(state);
 			});
 			
-			hee.logic.revdata('co11111111');
-			hee.logic.revDetail('co11111111');
-			hee.logic.datePic('co11111111');
+			hee.logic.revdata('kosu123456');
+			hee.logic.revDetail('kosu123456');
+			hee.logic.datePic('kosu123456');
 		  
 		});
 		
 		
-		
 	};
 	var setContextView=function(){
-	
 			$('#content').html(reservation.layout());
 			//$('body').html(reservation.layout());
-			
 	};
+
+	
 	return {init:init};
 })();
 /*******************************
@@ -273,7 +254,7 @@ hee.logic=(function(){
 				var limit=adult+child+teen;
 				$('#resiName').html(d.detail.residenceName);
 				$('#host_id').html(d.detail.memberId);
-				$('#price').html('￦ '+d.detail.price+'원');
+				$('#price').html(d.detail.price);
 				$('#imgbox').css({'background-image':'url('+d.detail.detailImg+')'});
 				$('#limit_no').html('인원 '+limit+'명');
 				$('#bed_num').html('침대 '+d.detail.bedNum+'개');
@@ -443,15 +424,13 @@ hee.logic=(function(){
 						.click(e=>{
 							alert('예약 확인 완료!');
 							
-
 						})
 					)
 			});
-			
 		});
-		
-		
 	};
+	
+	
 	return {init:init, 
 		revdata:revdata, 
 		revDetail:revDetail,
@@ -811,7 +790,9 @@ var reservation={
 			+'	'
 			+'	<div id="revBar" style="width:27%; height:430px; display: inline-block; float:right; margin-right:17%; margin-top:-100px; padding-left:3%; z-index:900">'
 			+'		<div style="width:100%; height:50px; background-color: #414141; padding-top: 10px; padding-left: 20px; opacity:0.9;">'
+			+'			<span style="color:white; font-size: 25px; font-weight:bold;"> ￦  </span>'
 			+'			<span id="price" style="color:white; font-size: 25px; font-weight:bold;">000,000</span>'
+			+'			<span style="color:white; font-size: 25px; font-weight:bold;"> 원</span>'
 			+'			<span style="color:white; font-size: 17px;">/박</span>'
 			+'		</div>'
 			+'		<div style="width:100%; height:430px; border: 1px solid; border-color: #c4c4c4; background: white; padding-top: 20px; padding-left: 20px;">'
@@ -822,7 +803,7 @@ var reservation={
 			+'			            	<span style="font-size: 20px;">체크인</span>'
 			+'							<span class="glyphicon glyphicon-calendar"></span>'
 			+'			                <div id="datepicker1" style="width: 100%; padding-top:10px;">'
-			+'			                    <input type="text" id="startDt" class="form-control" name="checkin" style="height:40px; font-size:15px;" required="required"/>'
+			+'			                    <input id="startDt" type="text" class="form-control" name="checkin" style="height:40px; font-size:15px;" required="required"/>'
 			+'			                </div>'
 			+'			            </div>'
 			+'			        </div>'

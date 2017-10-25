@@ -34,7 +34,10 @@
 		<result property="regdate" column="board_regdate"></result>		
 	</resultMap>
 	
-	<insert id="insert">
+	<insert id="insert"
+		parameterType="com.airbnb.web.domain.Reservation">
+		INSERT INTO reservation 
+		VALUES(#{rsvSeq}, #{checkin}, #{checkout}, sysdate(), #{adult}, #{teen}, #{child}, #{solddays}, #{hostSerial}, #{MemberId}, #{resPrice})
 	</insert>
 		
 	<select id="selectList"

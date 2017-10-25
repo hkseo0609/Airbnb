@@ -67,11 +67,18 @@ public class HKController {
 		System.out.println("####넘어온 아이디값:"+res.getMemberId());
 		Map<String,Object> map = new HashMap<>();
 		IPutService insertService = null;
-		/*insertService=(x)->{
+		
+		int totalNo=Integer.parseInt(res.getAdult())+Integer.parseInt(res.getTeen())+Integer.parseInt(res.getChild());
+		int totalPrice = totalNo * (Integer.parseInt(res.getResPrice()));
+		int random = (int)(Math.random()*9999);
+		String seq = "rev"+String.valueOf(random);
+		res.setResPrice(String.valueOf(totalPrice));
+		res.setRsvSeq(seq);
+		insertService=(x)->{
 			mapper.insert(res);
 		};
 		insertService.execute(res);
-		map.put("result", "success");*/
+		map.put("result", totalPrice);
 		return map;
 	};
 
