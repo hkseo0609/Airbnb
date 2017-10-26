@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Component
 public class BoardCate {
-	private String boardSeq, cateName, cateLevel, cateParentId, cateSection;
+	private String boardSeq, cateName, cateLevel, cateSeq;
 
 }

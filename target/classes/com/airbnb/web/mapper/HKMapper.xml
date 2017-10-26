@@ -16,6 +16,7 @@
 		<result property="teen" column="teen"/>		
 		<result property="adult" column="adult"/>		
 		<result property="child" column="child"/>
+		<result property="revAvg" column="rev_avg"/>
 		<!-- dd -->
 		<result property="wifi" column="wifi"/>		
 		<result property="bedNum" column="bed_num"/>		
@@ -43,9 +44,25 @@
 	<select id="selectList"
 		resultMap="ResiMap" 
 		parameterType="com.airbnb.web.command.Command">
-		SELECT * 
-		FROM board b JOIN reviewboard rb ON b.board_seq = rb.board_seq 
-		WHERE rb.host_serial LIKE #{search};
+		
+		<if test="action != null">
+         <choose>
+            <when test="action == 'revList'">
+                SELECT b.board_seq, b.board_content, b.board_regdate, b.member_id, rb.host_serial, 
+					(SELECT ROUND(AVG(review_star),1) as revavg 
+					FROM reviewboard 
+					GROUP BY host_serial) AS rev_avg
+				FROM board b 
+				JOIN reviewboard rb ON b.board_seq = rb.board_seq 
+				WHERE rb.host_serial LIKE #{search}
+            </when>
+            <when test="action == 'revsearch'">
+	            SELECT * 
+	            FROM board b JOIN reviewboard rb ON b.board_seq = rb.board_seq 
+	            WHERE rb.host_serial LIKE #{search} AND b.board_content LIKE '%${dir}%'   
+            </when>
+         </choose>
+      </if>      
 	</select>
    
 	<select id="selectOne"

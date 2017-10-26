@@ -19,7 +19,7 @@ import com.airbnb.web.domain.Reservation;
 import com.airbnb.web.mapper.HKMapper;
 import com.airbnb.web.service.IGetService;
 import com.airbnb.web.service.IListService;
-import com.airbnb.web.service.IPutService;
+import com.airbnb.web.service.IPostService;
 
 @RestController
 public class HKController {
@@ -32,52 +32,67 @@ public class HKController {
 		logger.info("get 진입");
 		System.out.println("###### 넘어온 시퀀스 값 : " +seq);
 		Map<String,Object> map = new HashMap<>();
-		IGetService detailService = null;
 		cmd.setSearch(seq);
-		detailService = (x)->{
-			
-			return mapper.selectOne(cmd);
-		};
-		map.put("detail", detailService.execute(cmd));
+		map.put("detail", new IGetService() {
+			@Override
+			public Object execute(Object o) {
+				return mapper.selectOne(cmd);
+			}
+		}.execute(null));
 		//ResultMap rm = (ResultMap) map.get("detail");
 		return map;
 		
 	};
 	
-	@RequestMapping(value="/list/{cate}/{seq}", method=RequestMethod.POST, consumes="application/json")
-	public @ResponseBody Map<?,?> list(@PathVariable String cate, @PathVariable String seq){
-		System.out.println("@@@@ 넘어온 시퀀스 값 : " +seq);
+	@RequestMapping(value="/list/{cate}", method=RequestMethod.POST, consumes="application/json")
+	public @ResponseBody Map<?,?> list(@RequestBody Command cmd){
+		System.out.println("@@@@ 넘어온 시퀀스 값 : " +cmd.getAction());
 		Map<String,Object> map = new HashMap<>();
+		
 		IListService listService = null;
 		IGetService countService = null;
-		cmd.setSearch(seq);
-		listService = (x)->{
-			return mapper.selectList(cmd);
+		switch(cmd.getAction()) {
+			case "revList":
+				listService = (x)->{
+					return mapper.selectList(cmd);
+				};
+				countService = (x)->{
+					return mapper.count(cmd);
+				};
+				map.put("revList", listService.execute(cmd));
+				map.put("count", countService.execute(cmd));
+				break;
+			case "revsearch":
+				listService = (x)->{
+					return mapper.selectList(cmd);
+				};
+				map.put("searchList", listService.execute(cmd));
 		};
-		countService = (x)->{
-			return mapper.count(cmd);
-		};
-		map.put("revList", listService.execute(cmd));
-		map.put("count", countService.execute(cmd));
+		
 		return map;
 	};
 	
-	@RequestMapping(value="/put/{cate}", method=RequestMethod.POST, consumes="application/json")
-	public @ResponseBody Map<?,?> put(@RequestBody Reservation res){
+	@RequestMapping(value="/post/{cate}", method=RequestMethod.POST, consumes="application/json")
+	public @ResponseBody Map<?,?> post(@RequestBody Reservation res){
 		System.out.println("####넘어온 아이디값:"+res.getMemberId());
 		Map<String,Object> map = new HashMap<>();
-		IPutService insertService = null;
 		
 		int totalNo=Integer.parseInt(res.getAdult())+Integer.parseInt(res.getTeen())+Integer.parseInt(res.getChild());
 		int totalPrice = totalNo * (Integer.parseInt(res.getResPrice()));
-		int random = (int)(Math.random()*9999);
+		int random = (int)(Math.random()*99999);
 		String seq = "rev"+String.valueOf(random);
 		res.setResPrice(String.valueOf(totalPrice));
 		res.setRsvSeq(seq);
-		insertService=(x)->{
+		/*insertService=(x)->{
 			mapper.insert(res);
 		};
-		insertService.execute(res);
+		insertService.execute(res);*/
+		new IPostService() {
+			@Override
+			public void execute(Object o) {
+				mapper.insert(res);
+			}
+		}.execute(null);
 		map.put("result", totalPrice);
 		return map;
 	};

@@ -214,6 +214,7 @@ hee.rev = (function(){
 			hee.logic.revdata('kosu123456');
 			hee.logic.revDetail('kosu123456');
 			hee.logic.datePic('kosu123456');
+			hee.logic.reviewSearch('kosu123456');
 		  
 		});
 		
@@ -328,38 +329,34 @@ hee.logic=(function(){
 				alert('에러 발생'+m);
 			}
 		});
-		/*$.ajax({
-			url:ctx +'/get/rev/'+x,
-			method:'post',
-			data : JSON.stringify({
-				'articleSeq':x,
-				'title':_title,
-				'id':_writer,
-				'content':_message
-			}),
-			contentType : 'application/json',
-			success : d=>{
-				alert('ajax 통신 성공'+d.update);
-				meta.board.detail(d.update);
-			},
-			error : (x,s,m)=>{
-				alert('글 수정시 에러 발생'+m);
-			}
-		});*/
+		
 	};
 	var revDetail=(x)=>{
 		alert('revDetail 진입');
 		init();
-		
+		$('#msg').val('');
 		$.ajax({
-			url:ctx +'/list/rev/'+x,
+			url:ctx +'/list/rev/',
 			method:'post',
-			data : JSON.stringify(x),
+			data : JSON.stringify({
+				'action':'revList',
+				'search':x,
+			}),
 			contentType : 'application/json',
 			success : d=>{
 				$('#review_no').html('후기 '+d.count+'개');
 				$('#reviewtb_no').html('후기 '+d.count+'개');
+				$('#review_star').html(d.revList.revAvg);
+				/*var star_num=d.revList.reviewStar*1;
+				alert(star_num);
+				for(i=star_num;i<star_num;i++){
+					alert(i);
+					var star = '<span class="glyphicon glyphicon-star"></span>';
+					$('#review_star').append(star);
+				}
+				*/
 				
+				var star;
 				var forTb;
 				$.each(d.revList, function(i,j){
 					forTb += '<tr>'
@@ -371,8 +368,16 @@ hee.logic=(function(){
 						+'<tr>'
 						+'	<td style="font-size: 17px;">'+j.contents+'</td>'
 						+'</tr>';
+					star = j.revAvg;
+					
 				});
 				$('#tbody').html(forTb);
+				var starview='';
+				for(var i=0; i<star; i++){
+					starview += '<span class="glyphicon glyphicon-star" style="color:#00A699; vertical-align: middle"></span>';
+				};
+				$('#review_star').html(starview);
+				$('#review_star2').html(starview);
 			},
 			error : (x,s,m)=>{
 				alert('에러 발생'+m);
@@ -385,7 +390,7 @@ hee.logic=(function(){
 		var memId = sessionStorage.getItem('smemberid');
 		alert("데이트"+memId);
 		$('#reservation').click(e=>{
-			alert('예약 완료');
+			alert('예약하시겠습니까?');
 			$.ajax({
 				url:ctx +'/put/rev/',
 				method:'post',
@@ -401,7 +406,7 @@ hee.logic=(function(){
 				}),
 				contentType : 'application/json',
 				success : d=>{
-					
+					$('#form_price').html(d.result);
 				},
 				error : (x,s,m)=>{
 					alert('에러 발생'+m);
@@ -413,7 +418,6 @@ hee.logic=(function(){
 			$('#formA').html($('#revNumA').text()+' 명');
 			$('#formT').html($('#revNumT').text()+' 명');
 			$('#formC').html($('#revNumC').text()+' 명');
-			$('#form_price').html('￦ '+'원');
 			
 			$.getScript(temp,()=>{
 				$('#formCm').html(compUI.iBtn('formBtn')
@@ -429,12 +433,49 @@ hee.logic=(function(){
 			});
 		});
 	};
-	
+	var reviewSearch =(x)=>{
+		$('#search').click(e=>{
+			$.ajax({
+				url:ctx +'/list/rev/',
+				method:'post',
+				data : JSON.stringify({
+					'action':'revsearch',
+					'search':x,
+					'dir': $('#msg').val(),
+				}),
+				contentType : 'application/json',
+				success : d=>{
+					$('#search').val('back')
+						.click(e=>{
+							revDetail(x);
+						});
+					
+					var forTb;
+					$.each(d.searchList, function(i,j){
+						forTb += '<tr>'
+							+'	<td style="font-size: 17px; background: #EAEAEA">'+j.memberId+'</td>'
+							+'</tr>'
+							+'<tr>'
+							+'	<td style="font-size: 17px;">'+j.regdate+'</td>'
+							+'</tr>'
+							+'<tr>'
+							+'	<td style="font-size: 17px;">'+j.contents+'</td>'
+							+'</tr>';
+					});
+					$('#tbody').html(forTb);
+				},
+				error : (x,s,m)=>{
+					alert('에러 발생'+m);
+				}
+			});
+		});
+	};
 	
 	return {init:init, 
 		revdata:revdata, 
 		revDetail:revDetail,
-		datePic:datePic
+		datePic:datePic,
+		reviewSearch:reviewSearch
 	};
 })();
 
@@ -623,8 +664,8 @@ var reservation={
 			+'						<span id="host_id" style="font-size: 17px;"></span>'
 			+'						<span style="font-size: 17px;">의 개인실</span>'
 			+'						<span style="font-size: 17px;">·</span>'
-			+'						<span id="review_star" style="font-size: 17px;">별점</span>'
 			+'						<span id="review_no"style="font-size: 17px;"></span>'
+			+'						<span id="review_star" style="font-size: 17px; padding-left:10px;"></span>'
 			+'					</div>'
 			+'					<div style="padding-top:20px;">'
 			+'						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>'
@@ -717,20 +758,17 @@ var reservation={
 			+'			</div>'
 			+'			<div id="review" style="padding-top:40px;">'
 			+'				<div style="width:100%; padding-bottom: 20px;">'
-			+'					<div style="width:150px; display: inline-block;">'
+			+'					<div style="display: inline-block;">'
 			+'						<span id="reviewtb_no" style="font-size: 28px; font-weight:bold;">후기</span>'
 			+'					</div>'
-			+'					<div style="width:100px; display: inline-block;">'
-			+'						<span id="reviewStar" style="font-size: 20px;">별점</span>'
+			+'					<div style="display: inline-block;">'
+			+'						<span id="review_star2" style="font-size: 20px;"></span>'
 			+'					</div>'
-			+'					<div style="width:300px; display: inline-block; float:right;">'
+			+'					<div id="search_box" style="width:300px; display: inline-block; float:right;">'
 			+'						<div id="searchBtn" style="width:50px; display: inline-block; float:right;">	'
 			+'						</div>'
 			+'						<div style="width:200px; display: inline-block; float:right; padding-right: 10px;">'
 			+'							<input id="msg" type="text" class="form-control" style="width:100%" name="searchWord" placeholder="후기 검색" >'
-			+'							<input type="hidden" name="action" value="search"/>'
-			+'							<input type="hidden" name="pageName" value="list" />'
-			+'							<input type="hidden" name="pageNumber" value="1" />'
 			+'						</div>'
 			+'					</div>'
 			+'				</div>'
@@ -900,6 +938,7 @@ var reservation={
 			+'	      	</div>'
 			+'	      	<div style="padding-top:10px; height: 40px; font-size: 17px;">'
 			+'	      		<span>총 금액 :</span>'
+			+'	      		<span style="margin-left:10px;">￦ </span>'
 			+'	      		<span id="form_price" style="margin-left:10px;"></span>'
 			+'	      	</div>'
 			+'	    </div>'
