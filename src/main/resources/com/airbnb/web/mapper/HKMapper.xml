@@ -13,10 +13,9 @@
 		<result property="infoImg" column="info_img"/>		
 		<result property="resiContent" column="resi_content"/>		
 		<result property="addr" column="addr"/>		
-		<result property="teen" column="teen"/>		
-		<result property="adult" column="adult"/>		
-		<result property="child" column="child"/>
+		<result property="limit" column="limit_no"/>		
 		<result property="revAvg" column="rev_avg"/>
+		<result property="solddays" column="solddays"/>
 		<!-- dd -->
 		<result property="wifi" column="wifi"/>		
 		<result property="bedNum" column="bed_num"/>		
@@ -28,6 +27,7 @@
 		<result property="washingMac" column="washing_mac"/>		
 		<result property="airCondi" column="Air_condi"/>		
 		<result property="kitchen" column="kitchen"/>
+		
 		<result property="boardSeq" column="board_seq"></result>
 		<result property="hostSerial" column="host_serial"></result>
 		<result property="reviewStar" column="review_star"></result>		
@@ -38,7 +38,7 @@
 	<insert id="insert"
 		parameterType="com.airbnb.web.domain.Reservation">
 		INSERT INTO reservation 
-		VALUES(#{rsvSeq}, #{checkin}, #{checkout}, sysdate(), #{adult}, #{teen}, #{child}, #{solddays}, #{hostSerial}, #{MemberId}, #{resPrice})
+		VALUES(#{rsvSeq}, #{checkin}, #{checkout}, sysdate(), #{adult}, #{teen}, #{child}, #{solddays}, #{hostSerial}, #{memberId}, #{resPrice})
 	</insert>
 		
 	<select id="selectList"

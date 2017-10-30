@@ -51,9 +51,9 @@ hee.rev = (function(){
 		var $transBtn=$('#transBtn');
 		var $searchBtn=$('#searchBtn');
 		var $revBtn=$('#revBtn');
-		var $formCm=$('#formCm');
 		var $review=$('#review');
-		var $container=$('#container')
+		var $container=$('#container');
+		var $rev_detail=$('#rev_detail');
 		
 		var menu = $('#menu').offset();
 		$(window).scroll(function(){
@@ -85,6 +85,8 @@ hee.rev = (function(){
 					.css({'font-size': '15px','margin-right':'15px', 'color':'black'})
 					.appendTo($menubar);
 			});
+			//숙소 디테일 호출
+			hee.logic.revdata('kosu111103');
 			
 			compUI.iBtn('trans')
 				.val('이 설명을 한국어로 번역하기')
@@ -102,122 +104,170 @@ hee.rev = (function(){
 				.click(e=>{
 					alert('후기 검색');
 				});
-			
-			compUI.iBtn('reservation')
-			.val('예약 완료')
-			.addClass('btn btn-danger','btn-large btn-block')
-			.css({'width':'93%', 'height':'50px', 'font-color':'white', 'margin-top':'20px', 'font-size':'22px','font-weight':'bold','outline-style': 'none'})
-			.attr('data-toggle','modal')
-			.attr('data-target','#myModal')
-			.appendTo($revBtn);
-			
-			// start Date 설정시 end Date의 min Date 지정
-			$( "#startDt" ).datepicker({
-				dayNames : ['일', '월', '화', '수', '목', '금', '토'],
-				dayNamesShort : ['일', '월', '화', '수', '목', '금', '토'],
-				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
-				monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
-				monthNames : ['1','2','3','4','5','6','7','8','9','10','11','12'],
-				showMonthAfterYear: true,
-				changeMonth: true,
-			    changeYear: true,
-			    dateFormat:'yy-mm-dd',
-			    minDate:1,
-			    closeText:'취소',
-			    showButtonPanel: true,
-	            onClose: function( selectedDate ) {
-	            	if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
-	                    $(this).val('');
-	                }else{
-	                	$( "#endDt" ).datepicker( "option", "minDate", selectedDate );
-	                }
-	            }
-	        });
-			
-			// end Date 설정시 start Date max Date 지정
-			$("#endDt").datepicker({
-				dayNames : ['일', '월', '화', '수', '목', '금', '토'],
-				dayNamesShort : ['일', '월', '화', '수', '목', '금', '토'],
-				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'], 
-				monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
-				monthNames : ['1','2','3','4','5','6','7','8','9','10','11','12'],
-				showMonthAfterYear: true,
-				changeMonth: true,
-			    changeYear: true,
-			    dateFormat:'yy-mm-dd',
-			    closeText:'취소',
-			    showButtonPanel: true,
-	            onClose: function( selectedDate ) {
-	            	if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
-	                    $(this).val('');
-	                };
-	            }
-	        });
-			
-	   		
-			compUI.btn('upRevA')
-			.addClass('glyphicon glyphicon-upload')
-			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpA');
-			
-			compUI.btn('downRevA')
-				.addClass('glyphicon glyphicon-download')
-				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-				.appendTo('#revDownA')
-				.click(e=>{
-					var state = $('#revNumA').text()*1;
-					state--;
-					if(state<0){
-						alert('더 이상 줄일 수 없습니다.');
-						state = 0;
-					}
-					$('#revNumA').text(state);
+			//달력 시작
+			$('#calender').after(reservation.cal());
+			$('#pick-date-bar').css({
+			    'width': '500px',
+			    'height': '40px',
+			    'display': 'table-cell',
+			    'vertical-align': 'middle',
+			    'text-align': 'center',
+			    'font-size': '16px',
+			    'font-weight': '700',
 			});
-			
-			compUI.btn('upRevT')
-			.addClass('glyphicon glyphicon-upload')
-			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpT');
-			
-			compUI.btn('downRevT')
-				.addClass('glyphicon glyphicon-download')
-				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-				.appendTo('#revDownT')
-				.click(e=>{
-					var state = $('#revNumT').text()*1;
-					state--;
-					if(state<0){
-						alert('더 이상 줄일 수 없습니다.');
-						state = 0;
-					}
-					$('#revNumT').text(state);
+			$('#start-date').css({
+			    'float': 'left',
+			    'width': '130px',
+			    'text-align': 'left',
+			    'margin-left': '20px',
 			});
-			compUI.btn('upRevC')
-			.addClass('glyphicon glyphicon-upload')
-			.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-			.appendTo('#revUpC');
-			
-			compUI.btn('downRevC')
-				.addClass('glyphicon glyphicon-download')
-				.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-				.appendTo('#revDownC')
-				.click(e=>{
-					var state = $('#revNumC').text()*1;
-					state--;
-					if(state<0){
-						alert('더 이상 줄일 수 없습니다.');
-						state = 0;
-					}
-					$('#revNumC').text(state);
+			$('#end-date').css({
+			    'width': '130px',
+			    'float': 'right',
+			    'text-align': 'right',
+			    'margin-right': '20px'
 			});
-			
-			hee.logic.revdata('kosu123456');
-			hee.logic.revDetail('kosu123456');
-			hee.logic.datePic('kosu123456');
-			hee.logic.reviewSearch('kosu123456');
-		  
-		});
+			$('#calendar').css({
+			    'width': '100%',
+			    'max-width': '400px'
+			});
 		
+			var startDate, endDate = '';
+			$('#my-element').datepicker({
+			    minDate: new Date(),
+			    range: true,
+			    onSelect: function (fd, d, picker) {
+			        function formatDate(date) {
+			            var week = new Array('일', '월', '화', '수', '목', '금', '토');
+			            var d = new Date(date),
+			                month = '' + (d.getMonth() + 1) + '월',
+			                date = '' + d.getDate() + '일';
+			            var todayArray = d.getDay();
+			            var day = week[todayArray] + '요일';
+			            if (month.length < 2) month = '0' + month;
+			            if (date.length < 2) date = '0' + date;
+			            return [month, date, day].join(' ');
+			        }
+			        startDate = formatDate(d[0]);
+			        endDate = formatDate(d[1]);
+			
+			        $('#start-date').text(startDate);
+			        if (d.length == 1) {
+			            $('#end-date').text("");
+			        } else {
+			            $('#end-date').text(endDate);
+			        }
+			        if (fd == "") {
+			            $('#start-date').text("");
+			            $('#end-date').text("");
+			        }
+			
+			        function formatDateForCount(date) {
+			            var d = new Date(date),
+			                year = d.getFullYear();
+			            	month = '' + (d.getMonth() + 1),
+			                date = '' + d.getDate();
+			            if (month.length < 2) month = '0' + month;
+			            if (date.length < 2) date = '0' + date;
+			            return [year, month, date].join('-');
+			        }
+			        var startString = formatDateForCount(d[0]);
+			        var endString = formatDateForCount(d[1]);
+			        var startArray = startString.split('-');
+			        var endArray = endString.split('-');
+			        var start = new Date(startArray[0], Number(startArray[1]) - 1, startArray[2]);
+			        var end = new Date(endArray[0], Number(endArray[1]) - 1, endArray[2]);
+			        var btwcount = (end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24;
+			        
+			        sessionStorage.setItem("btwcount", btwcount);
+			        sessionStorage.setItem("start_string", startString);
+			        sessionStorage.setItem("end_string", endString);
+			       
+			        if (isNaN(btwcount)) {
+			            $('#count-selected').text('');
+			            return false;
+			        } else {
+			            $('#count-selected').text(btwcount + '박을 선택했습니다.').css({'color':'red','font-size':'16px','font-weight':'700', 'margin-left':'5px'});
+			            
+			            compUI.iBtn('dayNext')
+						.val('다음')
+						.addClass('btn btn-danger')
+						.css({'width':'80px', 'height':'35px', 'font-color':'white', 'font-size':'18px','font-weight':'600','outline-style': 'none', 'float':'right', 'margin-right':'7px'})
+						.appendTo('#count-selected')
+						.click(e=>{
+							e.preventDefault();
+							$('#rev_detail').empty();
+							$('#rev_detail').html(regForm.personForm());
+							
+							compUI.btn('upRevA')
+							.addClass('glyphicon glyphicon-upload')
+							.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+							.appendTo('#revUpA');
+							
+							compUI.btn('downRevA')
+								.addClass('glyphicon glyphicon-download')
+								.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+								.appendTo('#revDownA');
+								
+							compUI.btn('upRevT')
+							.addClass('glyphicon glyphicon-upload')
+							.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+							.appendTo('#revUpT');
+							
+							compUI.btn('downRevT')
+								.addClass('glyphicon glyphicon-download')
+								.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+								.appendTo('#revDownT');
+								
+							compUI.btn('upRevC')
+							.addClass('glyphicon glyphicon-upload')
+							.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+							.appendTo('#revUpC');
+							
+							compUI.btn('downRevC')
+								.addClass('glyphicon glyphicon-download')
+								.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
+								.appendTo('#revDownC');
+								
+							hee.logic.upDown('kosu111103');
+							alert(sessionStorage.getItem('ssesionPrice'))
+							var result_rate = sessionStorage.getItem('ssesionPrice')*btwcount;
+							
+							$('#revbar_price').text('￦	'+sessionStorage.getItem('ssesionPrice')+' 원');
+							$('#revbar_day').text('Χ	'+btwcount+' 박');
+							$('#revbar_result').text(result_rate).css({'color':'red', 'font-weight':'600'});
+							
+							compUI.iBtn('reservation')
+							.val('예약 완료')
+							.addClass('btn btn-danger','btn-large btn-block')
+							.css({'width':'93%', 'height':'50px', 'font-color':'white', 'font-size':'22px','font-weight':'bold','outline-style': 'none'})
+							.attr('data-toggle','modal')
+							.attr('data-target','#myModal')
+							.appendTo('#revBtn')
+							.click(e=>{
+								if(sessionStorage.getItem('smemberid')==null){
+									e.preventDefault();
+									alert('숙소 예약은 로그인이 필요합니다.');
+									$('#modal_body').empty();
+									$('#modal_body').html(reservation.endModal());
+									
+								}else{
+									//예약 insert 호출
+									hee.logic.datePic('kosu111103');
+								};
+								
+							});
+							
+						});
+			            
+			        }
+			    }
+			 });
+	        //리뷰보드&리뷰검색 호출
+			hee.logic.reviewBoard('kosu111103');
+			hee.logic.reviewSearch('kosu111103');
+			
+		});
 		
 	};
 	var setContextView=function(){
@@ -232,7 +282,7 @@ hee.rev = (function(){
  * 예약페이지 로직단
  *******************************/
 hee.logic=(function(){
-	var ctx, js, temp;
+	var ctx, js, temp, price;
 	var init = ()=>{		
 		js=$$('j');
 		ctx=$$('x');
@@ -249,10 +299,13 @@ hee.logic=(function(){
 			data : JSON.stringify(x),
 			contentType : 'application/json',
 			success : d=>{
-				var adult=d.detail.adult*1;
-				var child=d.detail.child*1;
-				var teen=d.detail.teen*1;
-				var limit=adult+child+teen;
+				alert('revdata success 진입');
+				
+				var limit=d.detail.limit*1;
+				var ssesionPrice=d.detail.price*1;
+				sessionStorage.setItem('ssesionPrice', ssesionPrice);
+				alert('가져온 가격'+sessionStorage.getItem('ssesionPrice'));
+				
 				$('#resiName').html(d.detail.residenceName);
 				$('#host_id').html(d.detail.memberId);
 				$('#price').html(d.detail.price);
@@ -290,40 +343,6 @@ hee.logic=(function(){
 				if(d.detail.kitchen===('N')){
 					$('#kitchen').css({'text-decoration':'line-through'});
 				};
-				
-				$('#upRevA').click(e=>{	
-					e.preventDefault();
-					var state = $('#revNumA').text()*1;
-					state++;
-					if(state>adult){
-						alert('최대 인원은 '+adult+'명 입니다.');
-						state = adult;
-					}
-					$('#revNumA').text(state);
-				});
-				
-				$('#upRevT').click(e=>{	
-					e.preventDefault();
-					var state = $('#revNumT').text()*1;
-					state++;
-					if(state>teen){
-						alert('최대 인원은 '+teen+'명 입니다.');
-						state = teen;
-					}
-					$('#revNumT').text(state);
-				});
-				
-				$('#upRevC').click(e=>{	
-					e.preventDefault();
-					var state = $('#revNumC').text()*1;
-					state++;
-					if(state>child){
-						alert('최대 인원은 '+child+'명 입니다.');
-						state = child;
-					}
-					$('#revNumC').text(state);
-				});
-				
 			},
 			error : (x,s,m)=>{
 				alert('에러 발생'+m);
@@ -331,12 +350,98 @@ hee.logic=(function(){
 		});
 		
 	};
-	var revDetail=(x)=>{
-		alert('revDetail 진입');
+	
+	var upDown=(x)=>{
+		alert('upDown 진입');
+		init();
+		var limit=0;
+		$.ajax({
+			url:ctx +'/get/rev/'+x,
+			method:'post',
+			data : JSON.stringify(x),
+			contentType : 'application/json',
+			success : d=>{
+				limit=d.detail.limit*1;
+				alert("업다운의 넘어온 리미트 숫자"+limit);
+			},
+			error : (x,s,m)=>{
+				alert('에러 발생'+m);
+			}
+		});
+		
+		var state1=0;
+		var state2=0;
+		var state3=0;
+		$('#upRevA').click(e=>{	
+			e.preventDefault();
+			state1 = $('#revNumA').text()*1;
+			if((state1+state2+state3)<limit){
+				state1++;
+			}else{
+				alert('최대 인원은'+limit+'명 입니다.');
+			}
+			$('#revNumA').text(state1);
+		});
+		$('#downRevA').click(e=>{	
+			e.preventDefault();
+			state1 = $('#revNumA').text()*1;
+			state1--;
+			if(state1<0){
+				alert('더 이상 줄일 수 없습니다.');
+				state1 = 0;
+			}
+			$('#revNumA').text(state1);
+		});
+		$('#upRevT').click(e=>{	
+			e.preventDefault();
+			state2 = $('#revNumT').text()*1;
+			if((state1+state2+state3)<limit){
+				state2++;
+			}else{
+				alert('최대 인원은'+limit+'명 입니다.');
+			}
+			$('#revNumT').text(state2);
+		});
+		$('#downRevT').click(e=>{	
+			e.preventDefault();
+			state2 = $('#revNumT').text()*1;
+			state2--;
+			if(state2<0){
+				alert('더 이상 줄일 수 없습니다.');
+				state2 = 0;
+			}
+			$('#revNumT').text(state2);
+		});
+		$('#upRevC').click(e=>{	
+			e.preventDefault();
+			state3 = $('#revNumC').text()*1;
+			if((state1+state2+state3)<limit){
+				state3++;
+			}else{
+				alert('최대 인원은'+limit+'명 입니다.');
+			}
+			$('#revNumC').text(state3);
+		});
+		$('#downRevC').click(e=>{	
+			e.preventDefault();
+			state3 = $('#revNumC').text()*1;
+			state3--;
+			if(state3<0){
+				alert('더 이상 줄일 수 없습니다.');
+				state3 = 0;
+			}
+			$('#revNumC').text(state3);
+		});
+		
+		
+	};
+
+	var reviewBoard=(x)=>{
 		init();
 		$('#msg').val('');
 		$.ajax({
-			url:ctx +'/list/rev/',
+			
+			url:ctx +'/list/rev',
 			method:'post',
 			data : JSON.stringify({
 				'action':'revList',
@@ -346,18 +451,9 @@ hee.logic=(function(){
 			success : d=>{
 				$('#review_no').html('후기 '+d.count+'개');
 				$('#reviewtb_no').html('후기 '+d.count+'개');
-				$('#review_star').html(d.revList.revAvg);
-				/*var star_num=d.revList.reviewStar*1;
-				alert(star_num);
-				for(i=star_num;i<star_num;i++){
-					alert(i);
-					var star = '<span class="glyphicon glyphicon-star"></span>';
-					$('#review_star').append(star);
-				}
-				*/
 				
-				var star;
-				var forTb;
+				var star=0;
+				var forTb='';
 				$.each(d.revList, function(i,j){
 					forTb += '<tr>'
 						+'	<td style="font-size: 17px; background: #EAEAEA">'+j.memberId+'</td>'
@@ -368,8 +464,7 @@ hee.logic=(function(){
 						+'<tr>'
 						+'	<td style="font-size: 17px;">'+j.contents+'</td>'
 						+'</tr>';
-					star = j.revAvg;
-					
+					star=j.revAvg*1;
 				});
 				$('#tbody').html(forTb);
 				var starview='';
@@ -378,65 +473,68 @@ hee.logic=(function(){
 				};
 				$('#review_star').html(starview);
 				$('#review_star2').html(starview);
+				
 			},
 			error : (x,s,m)=>{
 				alert('에러 발생'+m);
 			}
 		});
-		
-	};
+	};  
+	
 	var datePic =(x)=>{
 		init();
 		var memId = sessionStorage.getItem('smemberid');
-		alert("데이트"+memId);
-		$('#reservation').click(e=>{
-			alert('예약하시겠습니까?');
+		alert("넘어온 아이디 값"+memId);
+		
+		$('#modal_body').empty();
+		$('#modal_body').html(reservation.resModal());
+		
 			$.ajax({
-				url:ctx +'/put/rev/',
+				url:ctx +'/post/rev',
 				method:'post',
 				data : JSON.stringify({
 					'hostSerial':x,
 					'memberId': sessionStorage.getItem('smemberid'),
-					'checkin':$('#startDt').val(),
-					'checkout':$('#endDt').val(),
+					'checkin':sessionStorage.getItem("start_string"),
+					'checkout':sessionStorage.getItem("end_string"),
 					'adult':$('#revNumA').text(),
 					'teen':$('#revNumT').text(),
 					'child':$('#revNumC').text(),
-					'resPrice':$('#price').text()
+					'resPrice':$('#revbar_result').text(),
+					'solddays':sessionStorage.getItem("btwcount"),
 				}),
 				contentType : 'application/json',
 				success : d=>{
-					$('#form_price').html(d.result);
+					$('#form_price').html("￦  "+$('#revbar_result').text()+" 원");
 				},
 				error : (x,s,m)=>{
 					alert('에러 발생'+m);
 				}
 			});
-			$('#formDt').html($('#startDt').val()+' ~ '+$('#endDt').val());
+			$('#formDt').html(sessionStorage.getItem("start_string")+' ~ '+sessionStorage.getItem("end_string"));
 			$('#formRev_name').html($('#resiName').text());
-			$('#form_id').html($('#host_id').text());
 			$('#formA').html($('#revNumA').text()+' 명');
 			$('#formT').html($('#revNumT').text()+' 명');
 			$('#formC').html($('#revNumC').text()+' 명');
 			
 			$.getScript(temp,()=>{
 				$('#formCm').html(compUI.iBtn('formBtn')
-						.val('예약 확인')
+						.val('예약 내역 확인')
 						.attr('data-dismiss','modal')
 						.addClass('btn btn-danger btn-large btn-block')
-						.css({'font-size': '22px', 'font-weight':'bold','outline-style': 'none'})
+						.css({'font-size': '22px', 'font-weight':'bold','width':'100%','outline-style': 'none'})
 						.click(e=>{
 							alert('예약 확인 완료!');
 							
 						})
 					)
 			});
-		});
+		
 	};
 	var reviewSearch =(x)=>{
 		$('#search').click(e=>{
 			$.ajax({
-				url:ctx +'/list/rev/',
+				url:ctx +'/list/rev',
 				method:'post',
 				data : JSON.stringify({
 					'action':'revsearch',
@@ -444,9 +542,10 @@ hee.logic=(function(){
 					'dir': $('#msg').val(),
 				}),
 				contentType : 'application/json',
-				success : d=>{
+				success : d=>{ㄴㄴ
 					$('#search').val('back')
 						.click(e=>{
+							$('#search').val('Go');
 							revDetail(x);
 						});
 					
@@ -471,11 +570,13 @@ hee.logic=(function(){
 		});
 	};
 	
+
 	return {init:init, 
 		revdata:revdata, 
-		revDetail:revDetail,
+		reviewBoard:reviewBoard,
 		datePic:datePic,
-		reviewSearch:reviewSearch
+		reviewSearch:reviewSearch,
+		upDown:upDown,
 	};
 })();
 
@@ -502,7 +603,6 @@ hee.register = (function(){
 			$nextBtnDiv=$('#nextBtnDiv');
 			$title=$('#title');
 			$progressBar=$('#progressBar');
-			//$proDiv.append(regForm.progress1());
 			$registerCont.append(regForm.address());
 		
 			compUI.btn('nextBtn','nextBtn')
@@ -772,32 +872,12 @@ var reservation={
 			+'						</div>'
 			+'					</div>'
 			+'				</div>'
-			+'				<div style="width:100%; padding-bottom: 30px; border-bottom: 1px solid #D5D5D5;">'
+			+'				<div id="frame_div" style="width:100%; padding-bottom: 30px; border-bottom: 1px solid #D5D5D5;">'
 			+'					<table class="table">'
 			+'						<tbody id="tbody">'
 			+'					    </tbody>'
 			+'				  	</table>'
-			+'					<nav aria-label="Page navigation" style="width:350px; margin:0 auto;">'
-			+'					  <ul class="pagination">'
-			+'					  	<li><a onclick="" style="color:#D9534F;"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></a></li>'
-			+'					    <li>'
-			+'					      <a onclick="" style="color:#D9534F;" aria-label="Previous">'
-			+'					        <span aria-hidden="true">&laquo;</span>'
-			+'					      </a>'
-			+'					   </li>'
-			+'						     <li><a href="#" style="color:#D9534F;">1</a></li>'
-			+'						     <li><a href="#" onclick="" style="color:#D9534F;">2</a></li>'
-			+'						     <li><a href="#" onclick="" style="color:#D9534F;">3</a></li>'
-			+'						     <li><a href="#" onclick="" style="color:#D9534F;">4</a></li>'
-			+'						     <li><a href="#" onclick="" style="color:#D9534F;">5</a></li>'
-			+'					    <li>'
-			+'					      <a onclick="" style="color:#D9534F;" aria-label="Next">'
-			+'					        <span aria-hidden="true">&raquo;</span>'
-			+'					      </a>'
-			+'					    </li>'
-			+'					    <li><a onclick="" style="color:#D9534F;"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></li>'
-			+'					  </ul>'
-			+'					</nav>'
+
 			+'					<div id="moveDiv2"></div>'
 			+'				</div>'
 			+'			</div>'
@@ -820,7 +900,7 @@ var reservation={
 			+'			<div style="padding-top:10px;">'
 			+'				<span id="loca_addr" style="font-size: 17px;">숙소 상세 주소</span>'
 			+'			</div>'
-			+'			<div style="margin-top:10px; height: 500px; background-color: #FFD9EC">'
+			+'			<div id="rev_map" style="margin-top:10px; height: 500px; background-color: #FFD9EC">'
 			+'				<span style="font-size: 17px;">지도 구현</span>'
 			+'			</div>'
 			+'		</div>'
@@ -833,74 +913,22 @@ var reservation={
 			+'			<span style="color:white; font-size: 25px; font-weight:bold;"> 원</span>'
 			+'			<span style="color:white; font-size: 17px;">/박</span>'
 			+'		</div>'
-			+'		<div style="width:100%; height:430px; border: 1px solid; border-color: #c4c4c4; background: white; padding-top: 20px; padding-left: 20px;">'
-			+'			<div class="form-group">'
+			+'		<div style="width:100%; height:470px; border: 1px solid; border-color: #c4c4c4; background: white;">'
+			+'			<div id="rev_detail">'
 			+'			    <div style="width: 100%">'
-			+'			       <div style="width: 45%; display: inline-block;">'
-			+'			            <div class="form-group">'
-			+'			            	<span style="font-size: 20px;">체크인</span>'
-			+'							<span class="glyphicon glyphicon-calendar"></span>'
-			+'			                <div id="datepicker1" style="width: 100%; padding-top:10px;">'
-			+'			                    <input id="startDt" type="text" class="form-control" name="checkin" style="height:40px; font-size:15px;" required="required"/>'
-			+'			                </div>'
-			+'			            </div>'
-			+'			        </div>'
-			+'			        <div style="width: 45%; display: inline-block;">'
-			+'			            <div class="form-group">'
-			+'			            	<span style="font-size: 20px;">체크아웃</span>'
-			+'			                <span class="glyphicon glyphicon-calendar"></span>'
-			+'			                <div id="datepicker2" style="padding-top:10px;">'
-			+'			                    <span><input type="text" class="form-control" id="endDt" name="checkout" style="height:40px; font-size:15px;" required="required"/></span>'
-			+'			                </div>' 
-			+'			            </div>'
-			+'			        </div>'
+			+'			        <div id="datepicker1" style="width: 95%; height:100%; padding-top:10px; padding-left:5%">'
+			+'                      <div id="calender">        '
+			+'			         </div>'
 			+'			    </div>'
 			+'			</div>'
-			+'			<div>'
-			+'				<div style="border-bottom: 1px solid #D5D5D5; vertical-align: middle; width:93%; height:35px;">'
-			+'					<span style="font-size:20px;">인원</span>'
-			+'					<span class="glyphicon glyphicon-user" style="font-size:15px;"></span>'
-			+'				</div>'
-			+'				<div style="margin-top:6%;">'
-			+'					<div style="display: inline-block;">'
-			+'			   			<span style="font-size:18px">성인</span>'
-			+'					</div>'
-			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
-			+'		        		<span id="revUpA"></span>'
-			+'		        		<span id="revNumA" style="font-size:18px;">0</span>'
-			+'		        		<span id="revDownA"></span>'
-			+'					</div>'
-			+'				</div>'
-			+'				<div style="margin-top:5%;">'
-			+'					<div style="display: inline-block;">'
-			+'			   			<span style="font-size:18px">청소년</span>'
-			+'					</div>'
-			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
-			+'			       		<span id="revUpT"></span>'
-			+'			       		<span id="revNumT" style="font-size:18px;">0</span>'
-			+'			       		<span id="revDownT"></span>'
-			+'					</div>'
-			+'				</div>'
-			+'				<div style="margin-top:5%">'
-			+'					<div style="display: inline-block;">'
-			+'			   			<span style="font-size:18px">유아</span>'
-			+'					</div>'
-			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
-			+'		        		<span id="revUpC"></span>'
-			+'		        		<span id="revNumC" style="font-size:18px;">0</span>'
-			+'		        		<span id="revDownC"></span>'
-			+'					</div>'
-			+'				</div>'
-			+'			</div>'
-			+'			<div id="revBtn" style="margin-top:8%">'
-			+'			</div>'
+			
 			+'		</div>'
 			+'	</div>'
 			+'</div>'//
 			+'<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >'
 			+'	  <div class="modal-dialog">'
 			+'	    <div class="modal-content">'
-			+'	      <div class="modal-header">'
+			+'		  <div class="modal-header">'
 			+'			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>'
 			+'			<div class="modal-title" id="myModalLabel" style="width: 50%;">'
 			+'				<div style="width: 30px; display: inline-block;">'
@@ -913,17 +941,21 @@ var reservation={
 			+'				</div>'
 			+'			</div>'
 			+'		</div>'
-			+'	    <div class="modal-body" style="margin: 0 auto; width: 80%;">'
-			+'	      	<div style="margin: auto; width: 100%; height:300px;'
+			+'	    <div id="modal_body" class="modal-body" style="margin: 0 auto; width: 80%;">'
+			+'	    </div>'
+			+'	    </div>'
+			+'	  </div>'
+			+'	</div>'
+			+'</div>';
+		},
+		resModal: ()=>{
+			return '<div style="margin: auto; width: 100%; height:300px;'
 			+'			background-image:url(https://a0.muscache.com/im/pictures/666eeff6-12f5-4a94-a2d7-fc727c95e5cf.jpg);'
 			+'			background-size: cover;">'
 			+'	      	</div>'
 			+'	      	<div style="padding-top: 5px; width: 100%; height: 40px;">'
 			+'	      		<span id="formRev_name" style="float:right; font-size: 25px; font-weight:bold;"></span>'
 			+'	      		<br />'
-			+'	      	</div>'
-			+'	      	<div style="width: 100%">'
-			+'	      		<span id="form_id" style="float:right; font-size: 17px; font-weight:bold;"></span>'
 			+'	      	</div>'
 			+'	      	<div style="margin-top:30px; padding-top:10px; height: 40px; border-bottom: 1px solid #D5D5D5; font-size: 17px;">'
 			+'	      		<span>예약 날짜 :</span>'
@@ -938,15 +970,25 @@ var reservation={
 			+'	      	</div>'
 			+'	      	<div style="padding-top:10px; height: 40px; font-size: 17px;">'
 			+'	      		<span>총 금액 :</span>'
-			+'	      		<span style="margin-left:10px;">￦ </span>'
 			+'	      		<span id="form_price" style="margin-left:10px;"></span>'
 			+'	      	</div>'
-			+'	    </div>'
-			+'	    <div id="formCm" class="modal-footer">'
-			+'	    </div>'
-			+'	  </div>'
-			+'	</div>'
-			+'</div>';
+			+'	    	<div id="formCm" class="modal-footer">'
+			+'	   		</div>';
+			
+		},
+		endModal: ()=>{
+			return 	'<div style="padding-top: 5px; width: 100%; height: 300px; padding-top:25%;  text-align: center;">'
+			+'	<span style="font-size: 24px; font-weight:bold;">예약은 로그인이 필요합니다.</span>'
+			+'	</div>';
+		},
+		cal: ()=>{
+			return  '<div id="pick-date-bar">'
+            +'       <div id="start-date"></div>'
+            +'       <div id="end-date" ></div><br>'
+            +'       </div>'
+            +'           <div id="my-element" data-language="korea" class="datepicker-here" data-multiple-dates-separator=" - "></div>'
+            +'       </div>'
+            +'       <p id="count-selected"></p>';
 		},
 };
 var regForm={
@@ -1128,6 +1170,77 @@ var regForm={
 			+'				<div id="endBtn" style=" margin: 0 auto; padding-top: 30%; padding-right:10%">'
 			+'				</div>'
 			+'			</div>';
-		}
+		},
+		personForm:()=>{
+			return '	<div style="width: 95%; height:100%; padding-top:10px; padding-left:10%">'
+			+'				<div style="border-bottom: 1px solid #D5D5D5; vertical-align: middle; width:93%; height:35px;">'
+			+'					<span style="font-size:20px;">인원</span>'
+			+'					<span class="glyphicon glyphicon-user" style="font-size:15px;"></span>'
+			+'				</div>'
+			+'				<div style="margin-top:6%;">'
+			+'					<div style="display: inline-block;">'
+			+'			   			<span style="font-size:18px">성인</span>'
+			+'					</div>'
+			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'		        		<span id="revUpA"></span>'
+			+'		        		<span id="revNumA" style="font-size:18px;">0</span>'
+			+'		        		<span id="revDownA"></span>'
+			+'					</div>'
+			+'				</div>'
+			+'				<div style="margin-top:5%;">'
+			+'					<div style="display: inline-block;">'
+			+'			   			<span style="font-size:18px">청소년</span>'
+			+'					</div>'
+			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'			       		<span id="revUpT"></span>'
+			+'			       		<span id="revNumT" style="font-size:18px;">0</span>'
+			+'			       		<span id="revDownT"></span>'
+			+'					</div>'
+			+'				</div>'
+			+'				<div style="margin-top:5%">'
+			+'					<div style="display: inline-block;">'
+			+'			   			<span style="font-size:18px">유아</span>'
+			+'					</div>'
+			+'					<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'		        		<span id="revUpC"></span>'
+			+'		        		<span id="revNumC" style="font-size:18px;">0</span>'
+			+'		        		<span id="revDownC"></span>'
+			+'					</div>'
+			+'				</div>'
+			+'				<div style="border-bottom: 1px solid #D5D5D5; vertical-align: middle; width:93%; height:35px; margin-top:10%">'
+			+'					<span style="font-size:20px;">결제 금액</span>'
+			+'					<span class="glyphicon glyphicon-credit-card" style="font-size:15px;"></span>'
+			+'				</div>'
+			+'				<div>'
+			+'					<div style="margin-top:5%;">'
+			+'						<div style="display: inline-block;">'
+			+'			   				<span style="font-size:18px">1박 요금</span>'
+			+'						</div>'
+			+'						<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'			   				<span id="revbar_price" style="font-size:18px"></span>'
+			+'						</div>'
+			+'					</div>'
+			+'					<div style="margin-top:5%;">'
+			+'						<div style="display: inline-block;">'
+			+'			   				<span style="font-size:18px">숙박 일수</span>'
+			+'						</div>'
+			+'						<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'			   				<span id="revbar_day" style="font-size:18px"></span>'
+			+'						</div>'
+			+'					</div>'
+			+'					<div style="margin-top:5%;">'
+			+'						<div style="display: inline-block;">'
+			+'			   				<span style="font-size:18px; font-weight:600; color:red">총 결제 금액</span>'
+			+'						</div>'
+			+'						<div style="display: inline-block; float:right; padding-right:6%;">'
+			+'			   				<span id="revbar_result" style="font-size:18px"></span>'
+			+'			   				<span style="font-size:18px"> 원</span>'
+			+'						</div>'
+			+'					</div>'
+			+'				</div>'
+			+'			</div>'
+			+'			<div id="revBtn" style="margin-top:8%; padding-left:7%;">'
+			+'			</div>';
+		},
 		
 };

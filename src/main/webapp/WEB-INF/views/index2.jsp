@@ -10,17 +10,13 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="${path.css}/main.css" /> 
-        <!--  달력 -->
+   
+     <!-- 달력 -->
      <link rel="stylesheet" href="./resources/dist/css/datepicker.css" type="text/css">
      <script src="./resources/dist/js/datepicker.js"></script>
-    <script src="./resources/dist/js/i18n/datepicker.korea.js"></script> 
-   
-    <!-- include summernote css/js-->
-   <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
-   <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script> 
-          
-   <!-- 구글 chart -->
-   <script src="https://www.gstatic.com/charts/loader.js"></script>
+    	<script src="./resources/dist/js/i18n/datepicker.korea.js"></script>
+     
+
      
    <link rel="shortcut icon" href="${path.img}/air-fabicon.png">
    <script src="${path.js}/app.js"></script>
@@ -29,19 +25,36 @@
    <script src="${path.js}/heekyung.js"></script>
    <script src="${path.js}/jiwon.js"></script>
    <script src="${path.js}/yongju.js"></script>
- 
-<style>
-	.menufix {position:fixed; top:0px;}
-	.revfix {position:fixed; top:0px;}
-</style>
+
 </head>
 
 <body>
+<div id="calendar">
+<table style="border: 1px solid black; width: 500px; height: 500px;">
+	<tbody>
+		<tr style="border: 1px solid black;">
+			<td style="border: 1px solid black;">
+				<table style="border: 1px solid red; width: 50%; height: 50%;">
+				    <tr style="border: 1px solid red;">
+						<td style="font-size: 17px;">아아아아ㅏ아아아</td>
+					</tr>
+					<tr style="border: 1px solid red;">
+						<td style="font-size: 17px;">가가가가가가</td>
+					</tr>
+					<tr style="border: 1px solid red;">
+						<td style="font-size: 17px;">나나나나나나나</td>
+					</tr>
+				</table>
+			</td>
+			<td style="border: 1px solid black;"></td>
+			<td style="border: 1px solid black;"></td>
+		</tr>
+	</tbody>
+</table>
 
+</div>
 </body>
 <script>
 
-	app.common.init('${path.ctx}');
-	
 </script>
 </html>

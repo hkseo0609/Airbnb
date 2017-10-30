@@ -1,5 +1,6 @@
 package com.airbnb.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +62,7 @@ public class HKController {
 				};
 				map.put("revList", listService.execute(cmd));
 				map.put("count", countService.execute(cmd));
+				
 				break;
 			case "revsearch":
 				listService = (x)->{
@@ -74,26 +76,23 @@ public class HKController {
 	
 	@RequestMapping(value="/post/{cate}", method=RequestMethod.POST, consumes="application/json")
 	public @ResponseBody Map<?,?> post(@RequestBody Reservation res){
-		System.out.println("####넘어온 아이디값:"+res.getMemberId());
+		System.out.println("####post 넘어온 아이디값:"+res.getMemberId());
 		Map<String,Object> map = new HashMap<>();
 		
-		int totalNo=Integer.parseInt(res.getAdult())+Integer.parseInt(res.getTeen())+Integer.parseInt(res.getChild());
-		int totalPrice = totalNo * (Integer.parseInt(res.getResPrice()));
+		/*int totalNo=Integer.parseInt(res.getAdult())+Integer.parseInt(res.getTeen())+Integer.parseInt(res.getChild());
+		int totalPrice = totalNo * (Integer.parseInt(res.getResPrice()));*/
 		int random = (int)(Math.random()*99999);
 		String seq = "rev"+String.valueOf(random);
-		res.setResPrice(String.valueOf(totalPrice));
+		/*res.setResPrice(String.valueOf(totalPrice));*/
 		res.setRsvSeq(seq);
-		/*insertService=(x)->{
-			mapper.insert(res);
-		};
-		insertService.execute(res);*/
+		
 		new IPostService() {
 			@Override
 			public void execute(Object o) {
 				mapper.insert(res);
 			}
 		}.execute(null);
-		map.put("result", totalPrice);
+		map.put("result", "success");
 		return map;
 	};
 
