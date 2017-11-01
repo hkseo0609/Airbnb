@@ -16,7 +16,8 @@
 		<result property="limit" column="limit_no"/>		
 		<result property="revAvg" column="rev_avg"/>
 		<result property="solddays" column="solddays"/>
-		<!-- dd -->
+		<result property="disable" column="disable"/>
+		<!-- resiopt -->
 		<result property="wifi" column="wifi"/>		
 		<result property="bedNum" column="bed_num"/>		
 		<result property="pet" column="pet"/>		
@@ -27,6 +28,14 @@
 		<result property="washingMac" column="washing_mac"/>		
 		<result property="airCondi" column="Air_condi"/>		
 		<result property="kitchen" column="kitchen"/>
+		<!-- resevation -->
+		<result property="rsvSeq" column="wifi"/>
+		<result property="checkin" column="wifi"/>
+		<result property="checkout" column="wifi"/>
+		<result property="adult" column="wifi"/>
+		<result property="teen" column="wifi"/>
+		<result property="child" column="wifi"/>
+		<result property="resPrice" column="resPrice"/>
 		
 		<result property="boardSeq" column="board_seq"></result>
 		<result property="hostSerial" column="host_serial"></result>
@@ -36,9 +45,26 @@
 	</resultMap>
 	
 	<insert id="insert"
-		parameterType="com.airbnb.web.domain.Reservation">
-		INSERT INTO reservation 
-		VALUES(#{rsvSeq}, #{checkin}, #{checkout}, sysdate(), #{adult}, #{teen}, #{child}, #{solddays}, #{hostSerial}, #{memberId}, #{resPrice})
+		parameterType="com.airbnb.web.command.Command">
+		
+		 <choose>
+            <when test="cate == 'rev'">
+                INSERT INTO reservation 
+				VALUES(#{view}, #{dir}, #{action}, sysdate(), #{column}, #{search}, #{startRow}, #{endRow}, #{serial}, #{pageNumber}, #{page})
+            </when>
+            <when test="cate == 'resi'">
+	            <choose>
+		            <when test="common == 'residence'">
+		                INSERT INTO residence(member_id, residence_name, price, zipcode, host_serial, resi_content, addr, limit_no)
+			            VALUES(#{view}, #{dir}, #{action}, #{column}, #{search}, #{startRow}, #{endRow}, #{page})
+		            </when>
+		            <when test="common == 'resiopt'">
+			            INSERT INTO resiopt
+			            VALUES(#{view}, #{dir}, #{action}, #{column}, #{search}, #{startRow}, #{endRow}, #{page}, #{pageNumber}, #{kitchen}, #{serial})
+		            </when>
+		         </choose>   
+            </when>
+         </choose>
 	</insert>
 		
 	<select id="selectList"
@@ -60,6 +86,11 @@
 	            SELECT * 
 	            FROM board b JOIN reviewboard rb ON b.board_seq = rb.board_seq 
 	            WHERE rb.host_serial LIKE #{search} AND b.board_content LIKE '%${dir}%'   
+            </when>
+            <when test="action == 'disableDate'">
+	            SELECT DATE_FORMAT(checkin,'%Y-%m-%d') AS disable, solddays 
+	            FROM reservation 
+	            WHERE host_serial LIKE #{search}
             </when>
          </choose>
       </if>      

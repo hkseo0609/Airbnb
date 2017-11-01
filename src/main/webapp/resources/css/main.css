@@ -482,7 +482,7 @@ body {
     width: 100% !important;
     text-overflow: ellipsis !important;
    }
-   input{
+  /*  input{
    padding: 1px 0px;
     -webkit-appearance: textfield;
     background-color: white;
@@ -505,7 +505,7 @@ body {
     text-align: start;
     margin: 0em;
     font: 13.3333px Arial;
-   }
+   } */
    .main-nav-filter-element-9{
    position: absolute !important;
     left: 0px !important;
@@ -1237,7 +1237,7 @@ li div:hover {
     box-sizing: border-box;
     color: gray;
 }
-textarea {
+/* textarea {
     vertical-align: top;
     height: 5em;
     resize: vertical;
@@ -1245,7 +1245,7 @@ textarea {
     height: 150;
     width: 80%;
     margin-left: 90;
-}
+} */
 .cho_input_text{ 
                  width: 80%; 
                  padding: 12px 20px; 

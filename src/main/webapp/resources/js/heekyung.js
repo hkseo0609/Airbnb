@@ -1,4 +1,3 @@
-//바뀐 거
 var hee=hee || {};
 
 hee.common = (function(){
@@ -7,10 +6,12 @@ hee.common = (function(){
 	};
 	var onCreate=function(){
 		setContextView();
+		
 	};
 	var setContextView=function(){
 		
 	};
+	
 	return {
 		init : init
 	};
@@ -35,6 +36,7 @@ var $$ = function(x){return hee.session.getPath(x);};
  * 예약페이지
  *******************************/
 hee.rev = (function(){
+	
 	var $container, ctx, js, img;
 	var init=function(){
 		//hee.session.init(ctx);
@@ -46,6 +48,8 @@ hee.rev = (function(){
 	};
 	var onCreate=function(){
 		setContextView();
+		//disable 달력 호출
+		hee.logic.disable('kosu123456');
 		
 		var $menubar=$('#menubar');
 		var $transBtn=$('#transBtn');
@@ -85,8 +89,11 @@ hee.rev = (function(){
 					.css({'font-size': '15px','margin-right':'15px', 'color':'black'})
 					.appendTo($menubar);
 			});
+			
 			//숙소 디테일 호출
-			hee.logic.revdata('kosu111103');
+			hee.logic.revdata('kosu123456');
+			//구글맵
+			$('#rev_map').load(ctx+'/gmap');
 			
 			compUI.iBtn('trans')
 				.val('이 설명을 한국어로 번역하기')
@@ -104,38 +111,54 @@ hee.rev = (function(){
 				.click(e=>{
 					alert('후기 검색');
 				});
+			
 			//달력 시작
 			$('#calender').after(reservation.cal());
-			$('#pick-date-bar').css({
-			    'width': '500px',
-			    'height': '40px',
-			    'display': 'table-cell',
-			    'vertical-align': 'middle',
-			    'text-align': 'center',
-			    'font-size': '16px',
-			    'font-weight': '700',
-			});
-			$('#start-date').css({
-			    'float': 'left',
-			    'width': '130px',
-			    'text-align': 'left',
-			    'margin-left': '20px',
-			});
-			$('#end-date').css({
-			    'width': '130px',
-			    'float': 'right',
-			    'text-align': 'right',
-			    'margin-right': '20px'
-			});
-			$('#calendar').css({
-			    'width': '100%',
-			    'max-width': '400px'
-			});
-		
+			$('#pick-date-bar').css({'width': '500px','height': '40px','display': 'table-cell','vertical-align': 'middle','text-align': 'center','font-size': '16px','font-weight': '700',});
+			$('#start-date').css({'float': 'left','width': '130px','text-align': 'left','margin-left': '20px',})
+				.text('CHECK-IN');
+			$('#end-date').css({'width': '130px','float': 'right','text-align': 'right','margin-right': '20px'})
+				.text('CHECK-OUT');
+			$('#calendar').css({'width': '100%','max-width': '400px'});
+			
+			var bean=[], date_disable=[];
+            var one = sessionStorage.getItem('checkday').split(',');
+            var two = sessionStorage.getItem('soldcount').split(',');
+        	for(var i=0; i<one.length;i++){
+        		var sold = (hee.logic.date_add(one[i],two[i])).split(',');
+        		bean += sold;
+        	};
+        	
+        	date_disable = bean.split(',');
+			
 			var startDate, endDate = '';
 			$('#my-element').datepicker({
 			    minDate: new Date(),
 			    range: true,
+			    onRenderCell: function (d, type) {
+			    	if (type == 'day') {
+		                var cellYear = d.getFullYear(),
+		                    cellMonth = d.getMonth(),
+		                    cellDate = d.getDate(),
+		                    disabled = false,
+		                    year, month, date;
+		                if (cellDate == date) {
+		                    disabled= true;
+		                }
+		                date_disable.forEach(function (date_disable) {
+		                	date_disable = date_disable.split('-');
+		                    year = date_disable[0];
+		                    month = parseInt(date_disable[1]) - 1;
+		                    date = parseInt(date_disable[2]);
+		                    if (cellYear == year && cellMonth == month && cellDate == date) {
+		                        disabled= true;
+		                    }
+		                });
+		                return {
+		                    disabled: disabled,
+		                }
+		            }
+			    },
 			    onSelect: function (fd, d, picker) {
 			        function formatDate(date) {
 			            var week = new Array('일', '월', '화', '수', '목', '금', '토');
@@ -150,16 +173,15 @@ hee.rev = (function(){
 			        }
 			        startDate = formatDate(d[0]);
 			        endDate = formatDate(d[1]);
-			
 			        $('#start-date').text(startDate);
 			        if (d.length == 1) {
-			            $('#end-date').text("");
+			            $('#end-date').text('CHECK-OUT');
 			        } else {
 			            $('#end-date').text(endDate);
 			        }
-			        if (fd == "") {
-			            $('#start-date').text("");
-			            $('#end-date').text("");
+			        if (fd == '') {
+			            $('#start-date').text('CHECK-IN');
+			            $('#end-date').text('CHECK-OUT');
 			        }
 			
 			        function formatDateForCount(date) {
@@ -179,20 +201,20 @@ hee.rev = (function(){
 			        var end = new Date(endArray[0], Number(endArray[1]) - 1, endArray[2]);
 			        var btwcount = (end.getTime() - start.getTime()) / 1000 / 60 / 60 / 24;
 			        
-			        sessionStorage.setItem("btwcount", btwcount);
-			        sessionStorage.setItem("start_string", startString);
-			        sessionStorage.setItem("end_string", endString);
+			        sessionStorage.setItem('btwcount', btwcount);
+			        sessionStorage.setItem('start_string', startString);
+			        sessionStorage.setItem('end_string', endString);
 			       
 			        if (isNaN(btwcount)) {
 			            $('#count-selected').text('');
 			            return false;
 			        } else {
-			            $('#count-selected').text(btwcount + '박을 선택했습니다.').css({'color':'red','font-size':'16px','font-weight':'700', 'margin-left':'5px'});
+			            $('#count-selected').text(btwcount + '박을 선택했습니다.').css({'color':'#FF5A5F','font-size':'16px','font-weight':'700', 'margin-left':'5px'});
 			            
 			            compUI.iBtn('dayNext')
 						.val('다음')
-						.addClass('btn btn-danger')
-						.css({'width':'80px', 'height':'35px', 'font-color':'white', 'font-size':'18px','font-weight':'600','outline-style': 'none', 'float':'right', 'margin-right':'7px'})
+						.addClass('btn')
+						.css({'width':'80px', 'background-color':'#FF5A5F', 'border-color':'#FF5A5F','height':'35px', 'color':'white', 'font-size':'16px','outline-style': 'none', 'float':'right', 'margin-right':'7px'})
 						.appendTo('#count-selected')
 						.click(e=>{
 							e.preventDefault();
@@ -229,31 +251,29 @@ hee.rev = (function(){
 								.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
 								.appendTo('#revDownC');
 								
-							hee.logic.upDown('kosu111103');
-							alert(sessionStorage.getItem('ssesionPrice'))
+							hee.logic.upDown('kosu123456');
 							var result_rate = sessionStorage.getItem('ssesionPrice')*btwcount;
 							
 							$('#revbar_price').text('￦	'+sessionStorage.getItem('ssesionPrice')+' 원');
 							$('#revbar_day').text('Χ	'+btwcount+' 박');
-							$('#revbar_result').text(result_rate).css({'color':'red', 'font-weight':'600'});
+							$('#revbar_result').text(result_rate).css({'color':'#FF5A5F', 'font-weight':'600'});
 							
 							compUI.iBtn('reservation')
 							.val('예약 완료')
-							.addClass('btn btn-danger','btn-large btn-block')
-							.css({'width':'93%', 'height':'50px', 'font-color':'white', 'font-size':'22px','font-weight':'bold','outline-style': 'none'})
+							.addClass('btn','btn-large btn-block')
+							.css({'width':'93%', 'height':'50px', 'background-color':'#FF5A5F', 'border-color':'#FF5A5F', 'color':'white', 'font-size':'22px','font-weight':'bold','outline-style': 'none'})
 							.attr('data-toggle','modal')
 							.attr('data-target','#myModal')
 							.appendTo('#revBtn')
 							.click(e=>{
 								if(sessionStorage.getItem('smemberid')==null){
 									e.preventDefault();
-									alert('숙소 예약은 로그인이 필요합니다.');
 									$('#modal_body').empty();
 									$('#modal_body').html(reservation.endModal());
 									
 								}else{
 									//예약 insert 호출
-									hee.logic.datePic('kosu111103');
+									hee.logic.datePic('kosu123456');
 								};
 								
 							});
@@ -264,8 +284,8 @@ hee.rev = (function(){
 			    }
 			 });
 	        //리뷰보드&리뷰검색 호출
-			hee.logic.reviewBoard('kosu111103');
-			hee.logic.reviewSearch('kosu111103');
+			hee.logic.reviewBoard('kosu123456');
+			hee.logic.reviewSearch('kosu123456');
 			
 		});
 		
@@ -274,6 +294,8 @@ hee.rev = (function(){
 			$('#content').html(reservation.layout());
 			//$('body').html(reservation.layout());
 	};
+	
+	
 
 	
 	return {init:init};
@@ -290,20 +312,18 @@ hee.logic=(function(){
 	};
 	
 	var revdata=(x)=>{
-		alert('revdata 진입');
 		init();
-		
 		$.ajax({
 			url:ctx +'/get/rev/'+x,
 			method:'post',
 			data : JSON.stringify(x),
 			contentType : 'application/json',
 			success : d=>{
-				alert('revdata success 진입');
 				
 				var limit=d.detail.limit*1;
 				var ssesionPrice=d.detail.price*1;
 				sessionStorage.setItem('ssesionPrice', ssesionPrice);
+				sessionStorage.setItem('mapAddress',d.detail.addr);
 				alert('가져온 가격'+sessionStorage.getItem('ssesionPrice'));
 				
 				$('#resiName').html(d.detail.residenceName);
@@ -348,11 +368,9 @@ hee.logic=(function(){
 				alert('에러 발생'+m);
 			}
 		});
-		
 	};
 	
 	var upDown=(x)=>{
-		alert('upDown 진입');
 		init();
 		var limit=0;
 		$.ajax({
@@ -432,8 +450,6 @@ hee.logic=(function(){
 			}
 			$('#revNumC').text(state3);
 		});
-		
-		
 	};
 
 	var reviewBoard=(x)=>{
@@ -521,12 +537,8 @@ hee.logic=(function(){
 				$('#formCm').html(compUI.iBtn('formBtn')
 						.val('예약 내역 확인')
 						.attr('data-dismiss','modal')
-						.addClass('btn btn-danger btn-large btn-block')
-						.css({'font-size': '22px', 'font-weight':'bold','width':'100%','outline-style': 'none'})
-						.click(e=>{
-							alert('예약 확인 완료!');
-							
-						})
+						.addClass('btn btn-large btn-block')
+						.css({'font-size': '22px','background-color':'#FF5A5F', 'border-color':'#FF5A5F','font-weight':'bold','width':'100%','outline-style': 'none'})
 					)
 			});
 		
@@ -542,7 +554,7 @@ hee.logic=(function(){
 					'dir': $('#msg').val(),
 				}),
 				contentType : 'application/json',
-				success : d=>{ㄴㄴ
+				success : d=>{
 					$('#search').val('back')
 						.click(e=>{
 							$('#search').val('Go');
@@ -569,7 +581,52 @@ hee.logic=(function(){
 			});
 		});
 	};
-	
+var disable =(x)=>{
+		init();
+		$.ajax({
+			url:ctx +'/list/rev',
+			method:'post',
+			data : JSON.stringify({
+				'action':'disableDate',
+				'search':x,
+			}),
+			contentType : 'application/json',
+			success : d=>{
+				var array1 = [];
+				var array2 = [];
+				$.each(d.disable, function(i,j){
+					array1 += (j.disable)+',';
+					array2 += (j.solddays*1)+',';
+				});
+				sessionStorage.setItem('checkday',array1);
+				sessionStorage.setItem('soldcount',array2);
+				console.log('ajax 안::'+sessionStorage.getItem('checkday'));
+				console.log('ajax 안::'+sessionStorage.getItem('soldcount'));
+			},
+			error : (x,s,m)=>{
+				alert('에러 발생'+m);
+			}
+			
+		});
+		
+		//$('#hide_btn').trigger('click');
+	};
+	var date_add =(x,y)=> {
+	    var yy = parseInt(x.substr(0, 4), 10);
+	    var mm = parseInt(x.substr(5, 2), 10);
+	    var dd = parseInt(x.substr(8), 10);
+	    var list = new Array;
+	    list = x+',';
+    	for(var i=0; i<y; i++){
+    		var d = new Date(yy, mm -1 , dd + 1);
+     	    yy = d.getFullYear();
+     	    mm = d.getMonth() + 1; 
+     	    dd = d.getDate(); 
+     	    var result = yy + '-' +  mm  + '-' + dd+',';
+     	    list += result;
+    	}
+	    return list;
+    };
 
 	return {init:init, 
 		revdata:revdata, 
@@ -577,6 +634,8 @@ hee.logic=(function(){
 		datePic:datePic,
 		reviewSearch:reviewSearch,
 		upDown:upDown,
+		disable:disable,
+		date_add:date_add,
 	};
 })();
 
@@ -598,6 +657,19 @@ hee.register = (function(){
 		setContentView();
 		
 		$.getScript(temp, ()=>{
+			var addr_si ='';
+			var addr_gu ='';
+			var addr_doro ='';
+			var addr_apt ='';
+			var addr_post ='';
+			var info_room ='';
+			var info_limit ='';
+			var info_name ='';
+			var info_price ='';
+			var info_bed ='';
+			var info_rest ='';
+			var info_cont ='';
+			
 			$proDiv=$('#proDiv');
 			$registerCont=$('#registerCont');
 			$nextBtnDiv=$('#nextBtnDiv');
@@ -607,137 +679,195 @@ hee.register = (function(){
 		
 			compUI.btn('nextBtn','nextBtn')
 				.text('다음')
-				.addClass('btn btn-danger')
-				.css({'width': '30%', 'height': '40px', 'font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
+				.addClass('btn')
+				.css({'width': '30%','background-color':'#FF5A5F', 'border-color':'#FF5A5F', 'color':'white','height': '40px', 'font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
 				.appendTo($nextBtnDiv)
 				.click(e=>{
+					addr_si = $('#addr_si').val();
+					addr_gu = $('#addr_gu').val();
+					addr_doro = $('#addr_doro').val();
+					addr_apt = $('#addr_apt').val();
+					addr_post = $('#addr_post').val();
+					console.log('addr_apt'+addr_si);
+					console.log('addr_apt'+addr_gu);
+					console.log('addr_apt'+addr_doro);
+					console.log('addr_apt'+addr_apt);
 					
-					$registerCont.empty();
-					$registerCont.append(regForm.info());
-					$title.html('숙소 상세정보를 설정하세요.');
-					$progressBar.css({'width': '50%', 'background-color': '#00A699'});
-					compUI.btn('upBtnA')
-						.addClass('glyphicon glyphicon-upload')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#upSpanA')
-						.click(e=>{	
-							var state = $('#numberA').text()*1;
-							state++;
-							if(state>=6){
-								alert('최대 인원은 5명 입니다.');
-								state = 5;
-							}
-							$('#numberA').text(state);
-						});
-					compUI.btn('dwonBtnA')
-						.addClass('glyphicon glyphicon-download')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#dwonSpanA')
-						.click(e=>{
-							var state = $('#numberA').text()*1;
-							state--;
-							if(state<0){
-								alert('더 이상 줄일 수 없습니다.');
-								state = 0;
-							}
-							$('#numberA').text(state);
-						});
-					compUI.btn('upBtnY')
-						.addClass('glyphicon glyphicon-upload')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#upSpanY')
-						.click(e=>{	
-							var state = $('#numberY').text()*1;
-							state++;
-							if(state>=6){
-								alert('최대 인원은 5명 입니다.');
-								state = 5;
-							}
-							$('#numberY').text(state);
-						});
-					compUI.btn('dwonBtnY')
-						.addClass('glyphicon glyphicon-download')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#dwonSpanY')
-						.click(e=>{
-							var state = $('#numberY').text()*1;
-							state--;
-							if(state<0){
-								alert('더 이상 줄일 수 없습니다.');
-								state = 0;
-							}
-							$('#numberY').text(state);
-						});
-					compUI.btn('upBtnB')
-						.addClass('glyphicon glyphicon-upload')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#upSpanB')
-						.click(e=>{	
-							var state = $('#numberB').text()*1;
-							state++;
-							if(state>=6){
-								alert('최대 인원은 5명 입니다.');
-								state = 5;
-							}
-							$('#numberB').text(state);
-						});
-					compUI.btn('dwonBtnB')
-						.addClass('glyphicon glyphicon-download')
-						.css({'vertical-align': 'middle', 'border': '0', 'background': 'white', 'font-size': '25px', 'color': '#00A699','outline-style': 'none'})
-						.appendTo('#dwonSpanB')
-						.click(e=>{
-							var state = $('#numberB').text()*1;
-							state--;
-							if(state<0){
-								alert('더 이상 줄일 수 없습니다.');
-								state = 0;
-							}
-							$('#numberB').text(state)
-						});
-					
-					($nextBtnDiv).html(compUI.btn('nextBtn2','nextBtn2')
-							.text('다음')
-							.addClass('btn btn-danger')
-							.css({'width': '30%', 'height': '40px', 'font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
-							.click(e=>{
-								$registerCont.empty();
-								$registerCont.append(regForm.detail());
-								$title.html('숙소 옵션을 설정하세요.');
-								$progressBar.css({'width': '75%', 'background-color': '#00A699'});
-								($nextBtnDiv).html(compUI.btn('nextBtn2','nextBtn2')
-										.text('다음')
-										.addClass('btn btn-danger')
-										.css({'width': '30%', 'height': '40px', 'font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
-										.click(e=>{
+					if(addr_si!=='' && addr_gu!=='' && addr_doro!=='' && addr_apt!=='' && addr_post!==''){
+						if(hee.valid.post_checker($('#addr_post').val())==='yes'){
+							$registerCont.empty();
+							$registerCont.append(regForm.info());
+							$title.html('숙소 상세정보를 설정하세요.');
+							$progressBar.css({'width': '50%', 'background-color': '#00A699'});
+							$nextBtnDiv.html(compUI.btn('nextBtn2','nextBtn2')
+								.text('다음')
+								.addClass('btn')
+								.css({'width': '30%', 'background-color':'#FF5A5F', 'border-color':'#FF5A5F', 'color':'white','height': '40px', 'font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
+								.click(e=>{
+									info_room = $('#info_room').val();
+									info_limit = $('#info_limit').val();
+									info_name = $('#info_name').val();
+									info_price = $('#info_price').val();
+									console.log('info_room'+info_room);
+									console.log('info_limit'+info_limit);
+									console.log('info_name'+info_name);
+									console.log('info_price'+info_price);
+									if(hee.valid.name_checker($('#info_name').val())==='yes'){
+										if(hee.valid.price_checker($('#info_price').val())==='yes'){
 											$registerCont.empty();
-											$nextBtnDiv.remove();
-											$title.remove();
-											$registerCont.append(regForm.endForm());
-											$progressBar.css({'width': '100%', 'background-color': '#00A699'});
-											compUI.btn('confirmBtn')
-												.text('확 인')
-												.addClass('btn btn-danger')
-												.css({'width': '100%', 'height': '50px', 'font-size': '20px', 'font-weight': 'bold'})
-												.appendTo('#endBtn')
-												.click(e=>{
-													alert('메인 페이지로!!!! 수정수정');
-													
-													app.common.init(ctx);
-												});
-										})
-								);
-							})
-					);
+											$registerCont.append(regForm.detail());
+											$title.html('숙소 옵션을 설정하세요.');
+											$progressBar.css({'width': '75%', 'background-color': '#00A699'});
+											($nextBtnDiv).html(compUI.btn('nextBtn2','nextBtn2')
+													.text('완료')
+													.addClass('btn btn-danger')
+													.css({'width': '30%', 'height': '40px', 'background-color':'#FF5A5F', 'border-color':'#FF5A5F', 'color':'white','font-size': '17px', 'font-weight': 'bold', 'float': 'right'})
+													.click(e=>{
+														info_bed = $('#info_bed').val();
+														info_rest = $('#info_rest').val();
+														info_cont = $('#info_cont').val();
+														console.log('info_room'+info_bed);
+														console.log('info_rest'+info_rest);
+														console.log('info_cont'+info_cont);
+														
+														$(":checkbox[name='info_ess']:checked").each(function(i){
+															sessionStorage.setItem($(this).val(),'Y');
+														});
+														$(":checkbox[name='info_ess']:not(:checked)").each(function(i){
+															sessionStorage.setItem($(this).val(),'N');
+														});
+
+														if(info_bed!=='' && info_rest!=='' && info_cont!==''){
+															var y = {
+																	'addr_si' : addr_si,
+																	'addr_gu' : addr_gu,
+																	'addr_doro' : addr_doro,
+																	'addr_apt' : addr_apt,
+																	'addr_post' : addr_post,
+																	'info_room' : info_room,
+																	'info_limit' : info_limit,
+																	'info_name' : info_name,
+																	'info_price' : info_price,
+																	'info_bed' : info_bed,
+																	'info_rest' : info_rest,
+																	'info_cont' : info_cont,
+															};
+															hee.resilogic.resi(y);
+															
+															$registerCont.empty();
+															$nextBtnDiv.remove();
+															$title.remove();
+															$registerCont.append(regForm.endForm());
+															$progressBar.css({'width': '100%', 'background-color': '#00A699'});
+															compUI.btn('confirmBtn')
+																.text('확 인')
+																.addClass('btn')
+																.css({'width': '100%', 'height': '50px', 'background-color':'#FF5A5F', 'border-color':'#FF5A5F', 'color':'white', 'font-size': '20px', 'font-weight': 'bold'})
+																.appendTo('#endBtn')
+																.click(e=>{
+																	alert('메인 페이지로!!!! 수정수정');
+																	//app.common.init(ctx);
+																});
+														}else{
+															alert('공백이 존재할 수 없습니다.');
+														};
+													})
+											);
+										}else{
+							                alert('이용 요금을 확인해 주세요.');
+							                $('#info_price').val('');
+										};
+									}else{
+										alert('숙소 이름은 50글자까지 입력 가능합니다.');
+						                $('#info_name').val('');
+									};
+								})
+							);
+						}else{
+							alert('우편번호를 확인해 주세요');
+			                $('#addr_post').val('');
+						};
+		            }else{
+		            	alert('공백이 존재할 수 없습니다.');
+		            }
 				});
 		});
 	};
 	var setContentView=function(){
-		
 		$('#content').html(regForm.layout());
-		
 	};
 	return{init:init}
 })();
+/*******************************
+ * 숙소 등록 로직단
+ *******************************/
+hee.resilogic=(function(){
+	var ctx, js, temp, price;
+	var init = ()=>{		
+		js=$$('j');
+		ctx=$$('x');
+		temp=js+'/template.js';	
+	};
+	var resi=(x)=>{
+		init();
+		alert('resi 진입');
+		var json = x;
+		alert(json.addr_doro);
+		var zipcode = json.addr_si + ' '+ json.addr_gu + ' ' + json.addr_doro + ' ' + json.addr_apt;
+		console.log(zipcode);
+		$.ajax({
+			url:ctx +'/post/resi',
+			method:'post',
+			data : JSON.stringify({
+				'memberId' : sessionStorage.getItem('smemberid'),
+				'residenceName' : json.info_name,
+				'price': json.info_price,
+				'zipcode': json.addr_post,
+				'resiContent': json.info_cont,
+				'addr': zipcode,
+				'limit': json.info_limit,
+				//resiopt
+				'wifi' : sessionStorage.getItem('wifi'),
+				'bedNum' : json.info_bed,
+				'pet' : sessionStorage.getItem('pet'),
+				'essentialItem' : sessionStorage.getItem('essentialItem'),
+				'parking' : sessionStorage.getItem('parking'),
+				'bathroomNum' : json.info_rest,
+				'tv' : sessionStorage.getItem('tv'),
+				'washingMac' : sessionStorage.getItem('washingMac'),
+				'airCondi' : sessionStorage.getItem('airCondi'),
+				'kitchen' : sessionStorage.getItem('kitchen'),
+			}),
+			contentType : 'application/json',
+			success : d=>{
+				
+			},
+			error : (x,s,m)=>{
+				alert('에러 발생'+m);
+			}
+		});
+	};
+	return {init:init,
+		resi:resi};
+})();
+/*******************************
+ * 숙소 등록 정규식
+ *******************************/
+hee.valid = {
+	    post_checker: x => {
+	        var regPost = /^[0-9]{5}$/;
+	        return regPost.test(x)? "yes" : "no";
+	    },
+	    name_checker : x => {
+	        var regName = /^.{10,49}$/;
+	        return regName.test(x)? "yes" : "no";
+	    },
+	    price_checker : x=> {
+	    	var regPrice = 200000;
+	    	
+	        return x<=regPrice ? "yes" : "no";
+	    }
+};
 
 
 /*******************************
@@ -793,7 +923,7 @@ var reservation={
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
 			+'									<path d="M23.5 4H22V2.5C22 1.12 20.884 0 19.503 0H4.497A2.502 2.502 0 0 0 2 2.495V4H.5a.5.5 0 1 0 0 1H2v15.501C2 21.331 2.67 22 3.5 22H5v.5c0 .83.67 1.5 1.5 1.5h14c.831 0 1.5-.666 1.5-1.503V5h1.5a.5.5 0 0 0 0-1zM3 2.495C3 1.675 3.674 1 4.497 1h15.006C20.33 1 21 1.67 21 2.5V4h-2v-.505A.5.5 0 0 1 19.5 3a.5.5 0 0 0 0-1A1.5 1.5 0 0 0 18 3.495V15H3V2.495zM3 16h15v2H3v-2zm.5 5a.498.498 0 0 1-.5-.499V19h15v1.505c0 .27-.226.495-.5.495h-14zM21 22.497c0 .284-.22.503-.5.503h-14a.498.498 0 0 1-.5-.5V22h11.5c.826 0 1.5-.673 1.5-1.495V5h2v17.497z" fill-rule="evenodd"></path>'
 			+'								</svg>'
-			+'								<span id="essential" style="font-size: 17px; padding-left:10px;">편의시설</span>'
+			+'								<span id="essential" style="font-size: 17px; padding-left:10px;">필수용품</span>'
 			+'							</div>'
 			+'							<div style="padding-top:15px;">'
 			+'								<svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1.2em; width: 1.2em; fill: currentcolor;">'
@@ -898,10 +1028,9 @@ var reservation={
 			+'		<div id="location" style="margin: 0 auto; width: 100%; padding-top:40px; padding-bottom: 20px;">'
 			+'			<span style="font-size: 28px; font-weight:bold;">지역정보</span>'
 			+'			<div style="padding-top:10px;">'
-			+'				<span id="loca_addr" style="font-size: 17px;">숙소 상세 주소</span>'
+			+'				<span id="loca_addr" style="font-size: 17px;"></span>'
 			+'			</div>'
-			+'			<div id="rev_map" style="margin-top:10px; height: 500px; background-color: #FFD9EC">'
-			+'				<span style="font-size: 17px;">지도 구현</span>'
+			+'			<div id="rev_map" style="margin-top:10px; height: 500px;">'
 			+'			</div>'
 			+'		</div>'
 			+'	</div>'
@@ -946,6 +1075,7 @@ var reservation={
 			+'	    </div>'
 			+'	  </div>'
 			+'	</div>'
+			+'	<input type="button" id="hide_btn" style="visibility:hidden">'
 			+'</div>';
 		},
 		resModal: ()=>{
@@ -977,7 +1107,7 @@ var reservation={
 			
 		},
 		endModal: ()=>{
-			return 	'<div style="padding-top: 5px; width: 100%; height: 300px; padding-top:25%;  text-align: center;">'
+			return 	'<div style="padding-top: 5px; width: 100%; height: 200px; padding-top:15%;  text-align: center;">'
 			+'	<span style="font-size: 24px; font-weight:bold;">예약은 로그인이 필요합니다.</span>'
 			+'	</div>';
 		},
@@ -993,7 +1123,7 @@ var reservation={
 };
 var regForm={
 		layout : ()=>{
-			return '<div id="container"  style="height: 100%;">'
+			return '<div id="container"  style="height: 100%; background-color:#FAFAFA;">'
 			+'	<div id="proDiv"> '
 			+'		<div class="progress"  style="height: 17px; background-color: #E7E7E7; margin-bottom:0;">'
 			+'			<div id="progressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 25%; background-color: #00A699;">'
@@ -1025,26 +1155,32 @@ var regForm={
 			+'							<div style="display: inline-block; width:41%; ">'
 			+'								<span style="font-size: 20px;">시/도</span>'
 			+'								<br />'
-			+'								<input style="width:100%;height:50px;font-size:17px" type="text" id="address1" placeholder="예) 서울특별시" name="address1">'
+			+'								<select id="addr_si" style="width:100%;height:50px;font-size:17px;">'
+			+'									<option value="서울특별시">서울특별시</option>'
+			+'									<option value="부산광역시">부산광역시</option>'
+			+'									<option value="전라북도">전라북도</option>'
+			+'									<option value="경상북도">경상북도</option>'
+			+'									<option value="제주특별자치도">제주특별자치도</option>'
+			+'								</select>'
 			+'							</div>'
 			+'							<div style="display: inline-block; width:46%; padding-left:5%;">'
 			+'								<span style="font-size: 20px;">구/군</span>'
 			+'								<br />'
-			+'								<input style="width:100%;height:50px;font-size:17px; " type="text" id="address2" placeholder="예) 마포구" name="address2">'
+			+'								<input  id="addr_gu" style="width:100%;height:50px;font-size:17px; " type="text" placeholder="예) 마포구" name="address2">'
 			+'							</div>'
 			+'						</div>'
 			+'						<div style="padding-top: 4%;">'
 			+'							<span style="font-size: 20px;">도로명 / 건물번호 / 아파트 이름 / 건물 이름</span>'
-			+'							<input style="width:88%;height:50px;font-size:17px" type="text" id="address3" placeholder="예) 백범로 23" name="address3">'
+			+'							<input id="addr_doro" style="width:88%;height:50px;font-size:17px" type="text" id="address3" placeholder="예) 백범로 23" name="address3">'
 			+'						</div>'
 			+'						<div style="padding-top: 4%;">'
 			+'							<span style="font-size: 20px;">아파트/건물명 및 동/호수(선택사항)</span>'
-			+'							<input style="width:88%;height:50px;font-size:17px" type="text" id="address4" placeholder="예) 거구장 3층" name="address4">'
+			+'							<input id="addr_apt" style="width:88%;height:50px;font-size:17px" type="text" id="address4" placeholder="예) 거구장 3층" name="address4">'
 			+'						</div>'
 			+'						<div style="padding-top: 4%;">'
 			+'							<span style="font-size: 20px;">우편번호</span>'
 			+'							<br />'
-			+'							<input style="width:88%;height:50px;font-size:17px" type="text" id="address" placeholder="예) 06014" name="address5">'
+			+'							<input id="addr_post" style="width:88%;height:50px;font-size:17px" type="text" id="address" placeholder="예) 06014" name="address5">'
 			+'						</div>'
 			+'						</div>';
 		},
@@ -1058,7 +1194,7 @@ var regForm={
 			+'				<select id="house" style="width:41%;height:50px;font-size:15px">'
 			+'					<option value="1">개인실</option>'
 			+'				</select>'
-			+'				<select id="house" style=" width:41%; margin-left:5%; height:50px; font-size:15px">'
+			+'				<select id="info_room" style=" width:41%; margin-left:5%; height:50px; font-size:15px">'
 			+'					<option value="1">침실 1개</option>'
 			+'					<option value="2">침실 2개 </option>'
 			+'					<option value="3">침실 3개 </option>'
@@ -1070,33 +1206,33 @@ var regForm={
 			+'				<div>'
 			+'					<span style="font-size: 20px;">숙박 인원(명)</span>'
 			+'				</div>'
-			+'			   	<div class="number" style="margin-top: 10px;">'
-			+'			   		<div style="width: 28%; display: inline-block;">'
-			+'			   			<span id="upSpanA" style="font-size:18px">성인</span>'
-			+'			         	<span id="numberA" style="font-size:18px;">0</span>'
-			+'			         	<span id="dwonSpanA"></span>'
-			+'		            </div>'
-			+'		            <div style="width: 33%; display: inline-block;">'
-			+'			   			<span id="upSpanY" style="font-size:18px">청소년</span>'
-			+'			         	<span id="numberY" style="font-size:18px;">0</span>'
-			+'			         	<span id="dwonSpanY"></span>'
-			+'		            </div>'
-			+'		            <div style="width: 30%; display: inline-block;">'
-			+'			   			<span id="upSpanB" style="font-size:18px">유아</span>'
-			+'			         	<span id="numberB" style="font-size:18px;">0</span>'
-			+'			         	<span id="dwonSpanB"></span>'
-			+'		            </div>'
-			+'		         </div>'
+			+'				<select id="info_limit" style="width:88%; height:50px; font-size:15px">'
+			+'					<option value="1">인원 1명</option>'
+			+'					<option value="2">인원 2명 </option>'
+			+'					<option value="3">인원 3명 </option>'
+			+'					<option value="4">인원 4명 </option>'
+			+'					<option value="5">인원 5명 </option>'
+			+'					<option value="6">인원 6명 </option>'
+			+'					<option value="7">인원 7명 </option>'
+			+'					<option value="8">인원 8명 </option>'
+			+'					<option value="9">인원 9명 </option>'
+			+'					<option value="10">인원 10명 </option>'
+			+'					<option value="11">인원 11명 </option>'
+			+'					<option value="12">인원 12명 </option>'
+			+'					<option value="13">인원 13명 </option>'
+			+'					<option value="14">인원 14명 </option>'
+			+'					<option value="15">인원 15명 </option>'
+			+'				</select>'
 			+'         	</div>'
 			+'			<div style="margin-top: 5%;">'
 			+'				<span style="font-size: 20px;">숙소 이름</span>'
-			+'				<input style="width:88%; height:50px; font-size:15px" type="text" id="houseName">'
+			+'				<input id="info_name" style="width:88%; height:50px; font-size:15px" type="text" placeholder="10자 이상 50자 이하로 입력해 주세요.">'
 			+'			</div>'
 			+'			<div style="margin-top: 5%;">'
 			+'				<span style="font-size: 20px;">1박 (하룻밤) 이용 요금</span>'
 			+'				<br />'
 			+'				<span style="font-size: 15px; color: red;">※최대 200,000원을 넘길 수 없습니다.</span>'
-			+'				<input style="width:88%; height:50px; font-size:15px" type="text" id="houseRate" placeholder="예) 89000">'
+			+'				<input id="info_price" style="width:88%; height:50px; font-size:15px" type="text" placeholder="예) 89000">'
 			+'			</div>'
 			+'		</div>';
 		},
@@ -1106,7 +1242,7 @@ var regForm={
 			+'				<div style="display: inline-block; width:41%; ">'
 			+'					<span style="font-size: 20px;">침대 개수</span>'
 			+'					<br />'
-			+'					<select id="house" style="width:100%; height:50px;font-size:17px; outline-style: none">'
+			+'					<select id="info_bed" style="width:100%; height:50px;font-size:17px; outline-style: none">'
 			+'					<option value="1">1</option>'
 			+'					<option value="2">2</option>'
 			+'					<option value="3">3</option>'
@@ -1117,7 +1253,7 @@ var regForm={
 			+'				<div style="display: inline-block; width:46%; padding-left:5%;">'
 			+'					<span style="font-size: 20px;">욕실개수</span>'
 			+'					<br />'
-			+'					<select id="house" style="width:100%; height:50px;font-size:17px; outline-style: none">'
+			+'					<select id="info_rest" style="width:100%; height:50px;font-size:17px; outline-style: none">'
 			+'					<option value="1">1</option>'
 			+'					<option value="2">2</option>'
 			+'					<option value="3">3</option>'
@@ -1131,16 +1267,16 @@ var regForm={
 			+'			</div>'
 			+'			<div style="margin-top:5px; padding-top:10px; width:88%; font-size: 20px;">'
 			+'				<div>'
-			+'			 	    <span><input type="checkbox" name="subject" value="편의시설" checked="checked" />편의시설</span> '
-			+'				    <span style="margin-left:25px;"><input type="checkbox" name="subject" value="티비" />티비</span> '
-			+'					<span style="margin-left:25px;"><input type="checkbox" name="subject" value="와이파이"  />주차장</span>'
-			+'					<span style="margin-left:25px;"><input type="checkbox" name="subject" value="주차장" />와이파이</span>'
+			+'			 	    <span><input type="checkbox" name="info_ess" value="essentialItem" checked="checked" />필수용품</span> '
+			+'				    <span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="tv" />티비</span> '
+			+'					<span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="parking"  />주차장</span>'
+			+'					<span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="wifi" />와이파이</span>'
 			+'				</div>'
 			+'				<div>'
-			+'					<span><input type="checkbox" name="subject" value="애완동물" />애완동물</span>'
-			+'					<span style="margin-left:25px;"><input type="checkbox" name="subject" value="부엌" />부엌</span>'
-			+'					<span style="margin-left:25px;"><input type="checkbox" name="subject" value="세탁기" />세탁기</span>'
-			+'					<span style="margin-left:25px;"><input type="checkbox" name="subject" value="냉난방" />냉난방</span>'
+			+'					<span><input type="checkbox" name="info_ess" value="pet" />애완동물</span>'
+			+'					<span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="kitchen" />부엌</span>'
+			+'					<span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="washingMac" />세탁기</span>'
+			+'					<span style="margin-left:25px;"><input type="checkbox" name="info_ess" value="airCondi" />냉난방</span>'
 			+'				</div>'
 			+'			</div>'
 			+'			<div>'
@@ -1148,7 +1284,7 @@ var regForm={
 			+'					<span style="font-size: 20px;">숙소 상세 설명</span>'
 			+'				</div>'
 			+'				<div>'
-			+'					<textarea name="detail_cont" cols="57%" rows="7"/>'	
+			+'					<textarea id="info_cont" cols="60" rows="8" style="resize:none;"></textarea>'	
 			+'				</div>'
 			+'			</div>';
 
@@ -1156,16 +1292,16 @@ var regForm={
 		
 		endForm: ()=>{
 			return '<div style="width:100%; height: 650px;">'
-			+'				<div style="padding-right: 30%; padding-left: 30%; padding-top: 15%">'
+			+'				<div style="width:180px; height:150px; margin: 0 auto; padding-top: 15%; padding-right:20%;">'
 			+'					<svg viewBox="0 0 1000 1000" role="presentation" aria-hidden="true" focusable="false" style="height:10em;width:10em;display:block;fill:#FF5A5F;" data-reactid="25">'
 			+'			            <path d="M499.3 736.7c-51-64-81-120.1-91-168.1-10-39-6-70 11-93 18-27 45-40 80-40s62 13 80 40c17 23 21 54 11 93-11 49-41 105-91 168.1zm362.2 43c-7 47-39 86-83 105-85 37-169.1-22-241.1-102 119.1-149.1 141.1-265.1 90-340.2-30-43-73-64-128.1-64-111 0-172.1 94-148.1 203.1 14 59 51 126.1 110 201.1-37 41-72 70-103 88-24 13-47 21-69 23-101 15-180.1-83-144.1-184.1 5-13 15-37 32-74l1-2c55-120.1 122.1-256.1 199.1-407.2l2-5 22-42c17-31 24-45 51-62 13-8 29-12 47-12 36 0 64 21 76 38 6 9 13 21 22 36l21 41 3 6c77 151.1 144.1 287.1 199.1 407.2l1 1 20 46 12 29c9.2 23.1 11.2 46.1 8.2 70.1zm46-90.1c-7-22-19-48-34-79v-1c-71-151.1-137.1-287.1-200.1-409.2l-4-6c-45-92-77-147.1-170.1-147.1-92 0-131.1 64-171.1 147.1l-3 6c-63 122.1-129.1 258.1-200.1 409.2v2l-21 46c-8 19-12 29-13 32-51 140.1 54 263.1 181.1 263.1 1 0 5 0 10-1h14c66-8 134.1-50 203.1-125.1 69 75 137.1 117.1 203.1 125.1h14c5 1 9 1 10 1 127.1.1 232.1-123 181.1-263.1z" data-reactid="26"></path>'
 			+'			        </svg>'
 			+'		        </div>'
-			+'				<div style="padding-top: 10%">'
-			+'					<span style="font-size: 28px; font-weight: 700;">이제 숙소 등록이 완료되었습니다!</span>'
+			+'				<div style="margin: 0 auto; padding-top: 20%; padding-right:10%; text-align: center;">'
+			+'					<span style="font-size: 28px; font-weight: 700;">숙소 등록이 완료되었습니다!</span>'
 			+'				</div>'
 			+'				<div style="width:90%; margin: 0 auto; padding-top: 25px; padding-right:10%; text-align: center;">'
-			+'					<span style="font-size: 20px; font-weight: 500; padding-top: 20%">이제 회원님의 지역에서 묵을 게스트들을 찾아 부수입을 올릴 수 있습니다.</span>'
+			+'					<span style="font-size: 20px; font-weight: 500; padding-top: 20%">이제 회원님의 숙소에서 묵을 게스트들을 찾아 부수입을 올릴 수 있습니다.</span>'
 			+'				</div>'
 			+'				<div id="endBtn" style=" margin: 0 auto; padding-top: 30%; padding-right:10%">'
 			+'				</div>'
@@ -1230,7 +1366,7 @@ var regForm={
 			+'					</div>'
 			+'					<div style="margin-top:5%;">'
 			+'						<div style="display: inline-block;">'
-			+'			   				<span style="font-size:18px; font-weight:600; color:red">총 결제 금액</span>'
+			+'			   				<span style="font-size:18px; font-weight:600; color:#FF5A5F">총 결제 금액</span>'
 			+'						</div>'
 			+'						<div style="display: inline-block; float:right; padding-right:6%;">'
 			+'			   				<span id="revbar_result" style="font-size:18px"></span>'
@@ -1244,3 +1380,5 @@ var regForm={
 		},
 		
 };
+
+

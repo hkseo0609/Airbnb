@@ -77,7 +77,7 @@ app.main=(()=>{
 		    	alert('호스트가기');
 		    	 $('#content').empty();
 			    $('#main-nav-txtnsearch').remove();
-			    $('body').css({'background-color':'#FAFAFA'});
+			    
 			    hee.common.init(ctx);
 			    hee.register.init();
 		    });

@@ -28,4 +28,10 @@ public class HomeController {
 		model.addAttribute("path", PathFactory.create());
 		return "index";
 	}
+	@RequestMapping("/gmap")
+	public String gmap(Model model) {
+		logger.info("gmap was  {}." ,"ENTERED!! ");
+		model.addAttribute("path", PathFactory.create());
+		return "map";
+	}
 }

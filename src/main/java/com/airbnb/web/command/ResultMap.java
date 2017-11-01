@@ -9,7 +9,7 @@ public class ResultMap {
 	/*common heekyung */
 	private String hostSerial, memberId, residenceName, price, zipcode, detailImg, infoImg, resiContent, addr, limit;
 	private String wifi, bedNum, pet, essentialItem, parking, bathroomNum, tv, washingMac, airCondi, kitchen,
-	boardSeq, reviewStar, contents, regdate;
+	boardSeq, reviewStar, contents, regdate, rsvSeq, checkin, checkout, adult, teen, child, solddays, resPrice, disable;
 	int revAvg; 
 	/*common jiwon.... */
 	/*common yongju */
